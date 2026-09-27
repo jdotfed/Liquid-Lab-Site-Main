@@ -24,7 +24,9 @@
     card.querySelector('.live-sale-badge')?.remove();
 
     const ticketOption = selectedOption?.value === 'ticket' || selectedOption?.dataset.ticket === 'true';
-    const regularPrice = selectedOption ? (ticketOption ? 'TICKET' : money(selectedOption.value)) : price.dataset.regularText;
+    const regularPrice = selectedOption
+      ? (selectedOption.value === 'ticket' ? 'TICKET' : money(selectedOption.value))
+      : price.dataset.regularText;
     const regularLink = selectedOption?.dataset.link || button.dataset.originalHref || button.dataset.regularHref;
     price.textContent = regularPrice;
 

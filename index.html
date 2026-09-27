@@ -480,35 +480,139 @@
           </div>
         </article>
 
-        <article class="product-card featured" data-category="bo2" data-product-id="bo2-current-services">
-          <div class="badge popular">MASSIVE PRICE DROP</div>
+        <article class="product-card" data-category="bo2" data-product-id="bo2-normal-prestige">
+          <div class="badge hot">BO2 MULTIPLAYER</div>
           <div class="product-image">
-            <img src="products/bo2-prestige.png" alt="BO2 Multiplayer Services — PS4/PS5" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
+            <img src="products/bo2-prestige.png" alt="BO2 Normal Prestige and Levels" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">BO2</div>
           </div>
-          <div class="product-meta"><span>MULTIPLAYER • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
-          <h3>BO2 Multiplayer Services — PS4/PS5</h3>
-          <p>Only the services listed below are currently available.</p>
+          <div class="product-meta"><span>NORMAL PRESTIGE • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Normal Prestige / Levels</h3>
+          <p>Choose any normal prestige from Prestige 1 through Master and receive Level 55.</p>
           <ul>
-            <li>Prestige of Choice (1–Master) + Level 55 — <strong>$20</strong></li>
-            <li>Prestige of Choice (1–Master) + Level 55 + Unlock All — <strong>$30</strong></li>
-            <li>BO2 PS4/PS5 Platinum Trophy — <strong>$5</strong></li>
-            <li>Custom camo and calling-card bundles available through a ticket</li>
-            <li><strong>All other BO2 services are unavailable due to patches.</strong></li>
+            <li>Prestige 1 through Master</li>
+            <li>Level 55 included</li>
+            <li>Unlock All available as an option</li>
           </ul>
           <div class="bot-lobby-selector" style="margin:14px 0 10px;">
-            <label for="bo2CurrentOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT SERVICE</label>
-            <select id="bo2CurrentOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
-              <option value="20" data-link="https://buy.stripe.com/dRm14fgIf2QmfVLaiv5AQ1l" data-details="Choose any prestige from 1 through Master • Rank-related unlocks • Level 55">Prestige + Level 55 — $20</option>
-              <option value="30" data-link="https://buy.stripe.com/00w7sDgIfbmSgZP0HV5AQ1m" data-details="Choose any prestige from 1 through Master • Rank-related unlocks • Level 55 • Unlock All">Prestige + Level 55 + Unlock All — $30</option>
-              <option value="5" data-link="https://buy.stripe.com/5kQfZ977F1Mi5h72Q35AQ1n" data-details="BO2 Platinum Trophy service for PS4 / PS5">BO2 PS4/PS5 Platinum Trophy — $5</option>
-              <option value="ticket" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Open a ticket to discuss a specific custom camo or calling-card bundle">Custom Camo / Calling Card Bundle — Open Ticket</option>
+            <label for="bo2NormalOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT SERVICE</label>
+            <select id="bo2NormalOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
+              <option value="10" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Choose any normal prestige from Prestige 1 through Master • Level 55 included">Prestige of Choice + Level 55 — $10</option>
+              <option value="20" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Choose any normal prestige from Prestige 1 through Master • Level 55 • Unlock All">Prestige of Choice + Level 55 + Unlock All — $20</option>
             </select>
           </div>
-          <p id="bo2CurrentDetails" class="package-details">Choose any prestige from 1 through Master • Rank-related unlocks • Level 55</p>
+          <p id="bo2NormalDetails" class="package-details">Choose any normal prestige from Prestige 1 through Master • Level 55 included</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="bo2CurrentPrice">$20.00</strong></div>
-            <a href="https://buy.stripe.com/dRm14fgIf2QmfVLaiv5AQ1l" class="buy-btn sellix-link" id="bo2CurrentBuy">Buy Product <span>→</span></a>
+            <div class="price"><small>PRICE</small><strong id="bo2NormalPrice">$10.00</strong></div>
+            <a href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer" class="buy-btn" id="bo2NormalBuy">Open Ticket <span>→</span></a>
+          </div>
+        </article>
+
+        <article class="product-card" data-category="bo2" data-product-id="bo2-modded-prestige">
+          <div class="badge hot">MODDED PRESTIGE</div>
+          <div class="product-image">
+            <img src="products/bo2-bundles.png" alt="BO2 Modded Prestige and Levels" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
+            <div class="product-icon">MP</div>
+          </div>
+          <div class="product-meta"><span>MODDED PRESTIGE • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Modded Prestige / Levels</h3>
+          <p>Select a modded prestige from Prestige 12 through 9999 and receive Level 55.</p>
+          <ul>
+            <li>Modded Prestige 12 through 9999</li>
+            <li>Level 55 included</li>
+            <li>Unlock All available as an option</li>
+          </ul>
+          <div class="bot-lobby-selector" style="margin:14px 0 10px;">
+            <label for="bo2ModdedOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT SERVICE</label>
+            <select id="bo2ModdedOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
+              <option value="15" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Choose any modded prestige from Prestige 12 through 9999 • Level 55 included">Modded Prestige of Choice + Level 55 — $15</option>
+              <option value="25" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Choose any modded prestige from Prestige 12 through 9999 • Level 55 • Unlock All">Modded Prestige + Level 55 + Unlock All — $25</option>
+            </select>
+          </div>
+          <p id="bo2ModdedDetails" class="package-details">Choose any modded prestige from Prestige 12 through 9999 • Level 55 included</p>
+          <div class="product-bottom">
+            <div class="price"><small>PRICE</small><strong id="bo2ModdedPrice">$15.00</strong></div>
+            <a href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer" class="buy-btn" id="bo2ModdedBuy">Open Ticket <span>→</span></a>
+          </div>
+        </article>
+
+        <article class="product-card" data-category="bo2" data-product-id="bo2-class-modifications">
+          <div class="badge hot">CUSTOM CLASSES</div>
+          <div class="product-image">
+            <img src="products/bo2-loadouts.png" alt="BO2 Class Modifications" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
+            <div class="product-icon">CLS</div>
+          </div>
+          <div class="product-meta"><span>CLASS MODIFICATIONS • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Class Modifications</h3>
+          <p>Preset and custom class modifications, scorestreaks, stats, and colored classes.</p>
+          <div class="bot-lobby-selector" style="margin:14px 0 10px;">
+            <label for="bo2ClassOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT MODIFICATION</label>
+            <select id="bo2ClassOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
+              <option value="15" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="10 preset modded classes shown in your ticket • Double DSR, Ballista, XPR, SVU, Riot Shield, and more">10 Preset Modded Classes — $15</option>
+              <option value="10" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Create a customized modded class when the available presets are not what you want">Customized Modded Class — $10</option>
+              <option value="10" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Examples include 3 UAVs or 3 Care Packages • Earn score for one and receive three • Mixable 2/1">Modded Scorestreaks — $10</option>
+              <option value="5" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Choose your preferred multiplayer statistics">Modded Stats of Choice — $5</option>
+              <option value="5" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Custom class text and colors">Colored Classes — $5</option>
+            </select>
+          </div>
+          <p id="bo2ClassDetails" class="package-details">10 preset modded classes shown in your ticket • Double DSR, Ballista, XPR, SVU, Riot Shield, and more</p>
+          <div class="product-bottom">
+            <div class="price"><small>PRICE</small><strong id="bo2ClassPrice">$15.00</strong></div>
+            <a href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer" class="buy-btn" id="bo2ClassBuy">Open Ticket <span>→</span></a>
+          </div>
+        </article>
+
+        <article class="product-card featured" data-category="bo2" data-product-id="bo2-unlock-packages">
+          <div class="badge popular">BO2 PACKAGES</div>
+          <div class="product-image">
+            <img src="products/bo2-bundles.png" alt="BO2 Unlock All Packages" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
+            <div class="product-icon">PKG</div>
+          </div>
+          <div class="product-meta"><span>COMPLETE PACKAGES • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Unlock All Packages</h3>
+          <p>Complete normal or modded progression packages with discounted extras available.</p>
+          <ul>
+            <li>Platinum Trophy add-on — <strong>+$2</strong></li>
+            <li>Modded Stats add-on — <strong>+$2</strong></li>
+            <li>Emblems — <strong>+$1 each or 10 for $10</strong></li>
+          </ul>
+          <div class="bot-lobby-selector" style="margin:14px 0 10px;">
+            <label for="bo2PackageOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT PACKAGE</label>
+            <select id="bo2PackageOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
+              <option value="25" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Prestige 1–Master + Level 55 • Unlock All calling cards, camos, and max weapon levels • Colored classes with custom text and color">Normal Unlock All Package — $25</option>
+              <option value="30" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Modded Prestige 12–9999 + Level 55 • Unlock All calling cards, camos, and max weapon levels • Modded stats of choice (build yours at https://bo2.statseditor.com/) • Colored classes">Modded Unlock All Package — $30</option>
+            </select>
+          </div>
+          <p id="bo2PackageDetails" class="package-details">Prestige 1–Master + Level 55 • Unlock All calling cards, camos, and max weapon levels • Colored classes with custom text and color</p>
+          <div class="product-bottom">
+            <div class="price"><small>PRICE</small><strong id="bo2PackagePrice">$25.00</strong></div>
+            <a href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer" class="buy-btn" id="bo2PackageBuy">Open Ticket <span>→</span></a>
+          </div>
+        </article>
+
+        <article class="product-card" data-category="bo2" data-product-id="bo2-extras-singles">
+          <div class="badge hot">EXTRAS &amp; SINGLES</div>
+          <div class="product-image">
+            <img src="products/bo2-prestige.png" alt="BO2 Extras and Single Services" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
+            <div class="product-icon">+</div>
+          </div>
+          <div class="product-meta"><span>EXTRAS &amp; SINGLES • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Extras / Singles</h3>
+          <p>Purchase individual unlocks, trophies, weapon levels, camos, calling cards, or emblems.</p>
+          <div class="bot-lobby-selector" style="margin:14px 0 10px;">
+            <label for="bo2ExtrasOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT EXTRA</label>
+            <select id="bo2ExtrasOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
+              <option value="5" data-link="https://buy.stripe.com/5kQfZ977F1Mi5h72Q35AQ1n" data-details="Unlock all BO2 trophies, including the Platinum Trophy, on PS4/PS5">All Trophies / Platinum — $5</option>
+              <option value="5" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Set all multiplayer weapons to maximum weapon level">All Weapons Max Level — $5</option>
+              <option value="5" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Unlock all available weapon camos">All Camos Unlock — $5</option>
+              <option value="5" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Unlock all available calling cards">All Calling Cards Unlocked — $5</option>
+              <option value="2" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Choose emblems from the list sent in your ticket • $2 each or 10 for $15">Emblems — $2 Each / 10 for $15</option>
+            </select>
+          </div>
+          <p id="bo2ExtrasDetails" class="package-details">Unlock all BO2 trophies, including the Platinum Trophy, on PS4/PS5</p>
+          <div class="product-bottom">
+            <div class="price"><small>PRICE</small><strong id="bo2ExtrasPrice">$5.00</strong></div>
+            <a href="https://buy.stripe.com/5kQfZ977F1Mi5h72Q35AQ1n" class="buy-btn sellix-link" id="bo2ExtrasBuy">Buy Product <span>→</span></a>
           </div>
         </article>
 
@@ -1508,19 +1612,29 @@
 
   <script>
     (() => {
-      const option = document.getElementById('bo2CurrentOption');
-      const price = document.getElementById('bo2CurrentPrice');
-      const details = document.getElementById('bo2CurrentDetails');
-      if (!option || !price || !details) return;
+      const bo2Selectors = [
+        ['bo2NormalOption', 'bo2NormalPrice', 'bo2NormalDetails'],
+        ['bo2ModdedOption', 'bo2ModdedPrice', 'bo2ModdedDetails'],
+        ['bo2ClassOption', 'bo2ClassPrice', 'bo2ClassDetails'],
+        ['bo2PackageOption', 'bo2PackagePrice', 'bo2PackageDetails'],
+        ['bo2ExtrasOption', 'bo2ExtrasPrice', 'bo2ExtrasDetails']
+      ];
 
-      const updateBo2Service = () => {
-        const selected = option.options[option.selectedIndex];
-        price.textContent = selected.value === 'ticket' ? 'TICKET' : `$${Number(selected.value).toFixed(2)}`;
-        details.textContent = selected.dataset.details || '';
-      };
+      bo2Selectors.forEach(([optionId, priceId, detailsId]) => {
+        const option = document.getElementById(optionId);
+        const price = document.getElementById(priceId);
+        const details = document.getElementById(detailsId);
+        if (!option || !price || !details) return;
 
-      option.addEventListener('change', updateBo2Service);
-      updateBo2Service();
+        const updateBo2Service = () => {
+          const selected = option.options[option.selectedIndex];
+          price.textContent = selected.value === 'ticket' ? 'TICKET' : `$${Number(selected.value).toFixed(2)}`;
+          details.textContent = selected.dataset.details || '';
+        };
+
+        option.addEventListener('change', updateBo2Service);
+        updateBo2Service();
+      });
     })();
   </script>
 
@@ -1589,7 +1703,11 @@
         ['bo7LobbyOption','bo7LobbyBuy'],
         ['bo7RankedOption','bo7RankedBuy'],
         ['bo6LobbyOption','bo6LobbyBuy'],
-        ['bo2CurrentOption','bo2CurrentBuy']
+        ['bo2NormalOption','bo2NormalBuy'],
+        ['bo2ModdedOption','bo2ModdedBuy'],
+        ['bo2ClassOption','bo2ClassBuy'],
+        ['bo2PackageOption','bo2PackageBuy'],
+        ['bo2ExtrasOption','bo2ExtrasBuy']
       ];
 
       checkoutSelectors.forEach(([selectId, buyId]) => {
