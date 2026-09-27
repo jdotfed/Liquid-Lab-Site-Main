@@ -12,6 +12,16 @@
     return `$${Number(value).toFixed(2)}`;
   }
 
+  function optionControlIndex(option, fallbackIndex) {
+    return option?.dataset.controlIndex === undefined
+      ? fallbackIndex
+      : Number(option.dataset.controlIndex);
+  }
+
+  function findControlledOption(select, rowIndex) {
+    return [...select.options].find((option, index) => optionControlIndex(option, index) === Number(rowIndex));
+  }
+
   function applySaleDisplay(card, sale, selectedOption) {
     const price = card.querySelector('.price strong');
     const button = card.querySelector('.buy-btn');
@@ -69,13 +79,14 @@
       if (select) {
         selectedOption = select.options[select.selectedIndex];
         optionRows.forEach(row => {
-          const option = select.options[row.option_index];
+          const option = findControlledOption(select, row.option_index);
           if (!option) return;
           const base = option.dataset.originalLabel || option.textContent.replace(/ — (?:Temporarily )?Unavailable$/, '');
           option.dataset.originalLabel = base;
           option.textContent = `${base}${row.status === 'paused' ? ' — Unavailable' : saleIsValid(row) ? ` — ${row.sale_label || 'SALE'} ${money(row.sale_price)}` : ''}`;
         });
-        selectedSale = optionRows.find(row => row.option_index === select.selectedIndex);
+        const selectedIndex = optionControlIndex(selectedOption, select.selectedIndex);
+        selectedSale = optionRows.find(row => Number(row.option_index) === selectedIndex);
       }
       applySaleDisplay(card, saleIsValid(selectedSale) ? selectedSale : product, selectedOption);
     };
@@ -150,7 +161,7 @@
     if (!select) return;
 
     optionRows.forEach(row => {
-      const option = select.options[row.option_index];
+      const option = findControlledOption(select, row.option_index);
       if (!option) return;
       if (!option.dataset.originalLabel) {
         option.dataset.originalLabel = option.textContent.replace(/ — (?:Temporarily )?Unavailable$/, '');
