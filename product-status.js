@@ -2,7 +2,9 @@
   const config = window.LIQUID_LAB_ADMIN_CONFIG;
   if (!config || !window.supabase) return;
 
-  const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey);
+  const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey, {
+    auth: { detectSessionInUrl: false, persistSession: false }
+  });
 
   function saleIsValid(record) {
     return Boolean(record?.sale_enabled && Number(record.sale_price) > 0 && /^https:\/\//i.test(record.sale_link || ''));
