@@ -1,0 +1,27 @@
+.ll-add-cart{width:100%;margin-top:10px;padding:11px 12px;border:1px solid #7122a8;border-radius:7px;background:rgba(118,16,180,.12);color:#e9d8ff;font:700 12px Inter,sans-serif;cursor:pointer;transition:background .15s,border-color .15s}
+.ll-add-cart:hover{background:rgba(118,16,180,.3);border-color:#a34ae9}
+.ll-add-cart[hidden]{display:none}
+.ll-cart-toggle{position:fixed;bottom:20px;right:20px;z-index:8500;display:flex;align-items:center;gap:13px;padding:13px 17px;border:1px solid #a43cff;border-radius:999px;background:#241135;color:#fff;box-shadow:0 12px 36px #0009;font:800 13px Inter,sans-serif;cursor:pointer}
+.ll-cart-toggle span{display:grid;place-items:center;min-width:23px;height:23px;padding:0 5px;border-radius:999px;background:#8c28df}
+.ll-cart-backdrop{position:fixed;inset:0;z-index:8800;background:#050408be;backdrop-filter:blur(3px)}
+.ll-cart-backdrop[hidden]{display:none}
+.ll-cart-drawer{position:fixed;z-index:8801;top:0;right:0;bottom:0;width:min(440px,100vw);display:flex;flex-direction:column;background:#111015;border-left:1px solid #67368a;box-shadow:-18px 0 50px #000b;transform:translateX(105%);transition:transform .22s ease;color:#fff}
+.ll-cart-drawer.open{transform:translateX(0)}
+.ll-cart-head{display:flex;align-items:flex-start;justify-content:space-between;padding:26px 22px;border-bottom:1px solid #2f2638}
+.ll-cart-head small{font:800 10px Inter,sans-serif;letter-spacing:.14em;color:#ad68df}
+.ll-cart-head h2{font:700 25px 'Space Grotesk',sans-serif;margin:5px 0 0}
+.ll-cart-head button{width:34px;height:34px;border:1px solid #3e3446;border-radius:8px;background:#1f1c25;color:#fff;font-size:25px;cursor:pointer}
+.ll-cart-items{overflow-y:auto;flex:1;padding:10px 22px}
+.ll-cart-empty{color:#a9a4ad;text-align:center;margin:50px 0;font-size:14px}
+.ll-cart-row{display:flex;gap:13px;padding:18px 0;border-bottom:1px solid #302938}
+.ll-cart-thumb{width:66px;height:66px;flex:0 0 66px;object-fit:cover;border:1px solid #3f3150;border-radius:8px;background:#1c1921}
+.ll-cart-info{min-width:0;flex:1}.ll-cart-info strong{display:block;font-size:13px;line-height:1.4}.ll-cart-info small{display:block;color:#aaa4b2;font-size:12px;line-height:1.4;margin:5px 0 8px}.ll-cart-info em{font-style:normal;font-size:13px;color:#c988fc;font-weight:800}
+.ll-cart-info .ll-cart-unavailable{color:#ffb5b5}
+.ll-cart-row-actions{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.ll-cart-quantity{display:flex;align-items:center;border:1px solid #44394c;border-radius:6px;overflow:hidden}.ll-cart-quantity button,.ll-cart-remove{background:transparent;border:0;color:#e6d8ed;cursor:pointer;font-size:17px}.ll-cart-quantity button{width:32px;height:30px}.ll-cart-quantity span{min-width:27px;text-align:center;font-size:12px}.ll-cart-remove{font-size:12px;color:#baa9c8;text-decoration:underline}
+.ll-cart-footer{padding:19px 22px 22px;border-top:1px solid #33253e;background:#161119}
+.ll-cart-total{display:flex;align-items:center;justify-content:space-between;font-size:14px}.ll-cart-total strong{font-size:22px}.ll-cart-footer p{font-size:11px;color:#aba1b2;line-height:1.5;margin:9px 0 15px}.ll-cart-footer .ll-cart-message{color:#ffb7b7;font-size:12px;min-height:0;margin:0 0 9px}.ll-cart-message:empty{display:none}
+.ll-cart-checkout{width:100%;padding:14px;border:0;border-radius:7px;background:#8429cf;color:#fff;font:800 13px Inter,sans-serif;cursor:pointer}.ll-cart-checkout:hover{background:#9e38ec}.ll-cart-checkout:disabled{opacity:.5;cursor:not-allowed}.ll-cart-continue{display:block;width:100%;margin-top:9px;background:transparent;border:0;color:#c7b7d2;font:600 12px Inter,sans-serif;cursor:pointer;padding:9px}
+.ll-cart-notice{position:fixed;z-index:8700;left:50%;bottom:22px;transform:translateX(-50%);max-width:min(520px,calc(100vw - 30px));padding:13px 18px;border:1px solid #9451bd;border-radius:9px;background:#23142d;color:#fff;box-shadow:0 12px 30px #000b;font:600 13px Inter,sans-serif}
+.ll-cart-notice[hidden]{display:none}
+@media(max-width:600px){.ll-cart-toggle{right:12px;bottom:12px}.ll-cart-notice{bottom:72px}}

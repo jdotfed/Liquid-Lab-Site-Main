@@ -18,6 +18,7 @@
   });
   let linkedUser = null;
   let checkingOut = false;
+  window.LiquidLabCustomerAuth = { client: db, getLinkedUser: () => linkedUser };
 
   // Take the OAuth code out of the URL before the announcement's Supabase client
   // initializes. Only this client owns the PKCE verifier and customer session.

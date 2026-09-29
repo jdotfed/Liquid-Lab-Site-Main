@@ -236,6 +236,8 @@
       const card = document.querySelector(`[data-product-id="${product.product_id}"]`);
       if (card) setupCardSales(card, product, optionError || !options ? [] : options.filter(option => option.product_id === product.product_id));
     });
+    window.LiquidLabProductControls = { products, options: optionError ? [] : options || [] };
+    window.dispatchEvent(new Event('liquidlab:products-updated'));
   }
 
   loadProductStatuses();
