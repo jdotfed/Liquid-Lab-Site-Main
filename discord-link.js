@@ -14,10 +14,24 @@
 
   // Keep customer Discord sessions separate from the admin panel session.
   const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey, {
-    auth: { storageKey: 'liquidlab-discord-customer', flowType: 'pkce' }
+    auth: { storageKey: 'liquidlab-discord-customer', flowType: 'pkce', detectSessionInUrl: false }
   });
   let linkedUser = null;
   let checkingOut = false;
+
+  // Take the OAuth code out of the URL before the announcement's Supabase client
+  // initializes. Only this client owns the PKCE verifier and customer session.
+  const callbackUrl = new URL(location.href);
+  const authCode = callbackUrl.searchParams.get('code');
+  const callbackError = callbackUrl.searchParams.get('error_description');
+  if (authCode || callbackError) {
+    callbackUrl.searchParams.delete('code');
+    callbackUrl.searchParams.delete('sb_flow_id');
+    callbackUrl.searchParams.delete('error');
+    callbackUrl.searchParams.delete('error_code');
+    callbackUrl.searchParams.delete('error_description');
+    history.replaceState(history.state, '', callbackUrl.pathname + callbackUrl.search + callbackUrl.hash);
+  }
 
   function discordIdentity(user) {
     const identity = user?.identities?.find((item) => item.provider === 'discord');
@@ -48,7 +62,27 @@
     // Wait until the auth callback finishes before reading the verified identity.
     setTimeout(() => { refreshUser().catch(() => showUser(null)); }, 0);
   });
-  refreshUser().catch(() => showUser(null));
+  async function finishSignIn() {
+    if (callbackError) {
+      showUser(null);
+      status.textContent = `Discord could not connect: ${callbackError}`;
+      return;
+    }
+    if (authCode) {
+      status.textContent = 'Finishing Discord connection…';
+      const { error } = await db.auth.exchangeCodeForSession(authCode);
+      if (error) {
+        showUser(null);
+        status.textContent = `Discord could not connect: ${error.message}. Please try again.`;
+        return;
+      }
+    }
+    await refreshUser();
+  }
+  finishSignIn().catch((error) => {
+    showUser(null);
+    status.textContent = `Discord could not connect: ${error?.message || 'unknown error'}. Please try again.`;
+  });
 
   connect.addEventListener('click', async () => {
     connect.disabled = true;
