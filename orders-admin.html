@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0c0b10">
+  <title>Orders — Liquid Lab Owner Panel</title>
+  <link rel="stylesheet" href="order.css?v=20260929-1">
+  <style>
+    .admin-shell{width:min(100% - 32px,1050px);margin:42px auto 80px}.admin-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}.admin-header h1{margin:0}.admin-note{color:#b9adc2;font-size:13px;line-height:1.5}.admin-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.admin-actions button,.admin-actions a{border:1px solid #634879;border-radius:8px;padding:10px 13px;background:#22182a;color:#eee2f8;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}
+    .orders{display:grid;gap:12px}.order-card{background:#17141c;border:1px solid #3f3150;border-radius:12px;padding:18px}.order-card-head{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.order-card strong{overflow-wrap:anywhere}.order-card p{color:#c1b3ca;font-size:13px;line-height:1.5}.order-card small{display:block;color:#98899f;font-size:12px}.order-card label{display:block;font-size:12px;color:#cdbbd8;margin:12px 0 6px}.order-card select{width:min(100%,240px);min-height:42px;padding:8px 11px;background:#0d0b10;color:#fff;border:1px solid #685377;border-radius:8px;font:inherit}.order-card button{margin-left:8px;min-height:42px;padding:9px 14px;background:#7725b1;color:#fff;border:0;border-radius:8px;font:inherit;cursor:pointer}.order-card button:disabled{opacity:.6}.order-card .row{display:flex;align-items:end;gap:8px;flex-wrap:wrap}.empty{color:#bdb1c4;font-size:14px}
+  </style>
+</head>
+<body>
+  <header class="top"><a class="brand" href="index.html"><img src="logo.png" alt=""><span>Liquid<span class="accent">Lab</span></span></a><a href="admin.html">Store controls</a></header>
+  <main class="admin-shell">
+    <div class="admin-header"><div><p class="eyebrow">OWNER ACCESS</p><h1>Recent orders</h1></div><div class="admin-actions"><button id="refreshOrders" type="button">Refresh</button><a href="admin.html">Admin panel</a></div></div>
+    <p class="admin-note">These are paid Stripe purchases. Set progress here after your team starts or completes a service. This progress is separate from the Discord bot’s ticket status.</p>
+    <p id="adminMessage" class="message" role="status"></p>
+    <div id="orders" class="orders" aria-live="polite"></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="site-config.js?v=20260907"></script>
+  <script>
+  (() => {
+    const config = window.LIQUID_LAB_ADMIN_CONFIG;
+    const host = document.getElementById('orders');
+    const message = document.getElementById('adminMessage');
+    if (!config || !window.supabase) { message.textContent = 'Admin configuration is unavailable.'; return; }
+    const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey);
+    const owners = config.ownerEmails.map(email => email.toLowerCase());
+    const money = (n, currency) => new Intl.NumberFormat('en-US', {style:'currency',currency:currency.toUpperCase()}).format(n/100);
+    function el(tag, text, className) { const node=document.createElement(tag);node.textContent=text;if(className)node.className=className;return node; }
+    async function load() {
+      host.replaceChildren(); message.textContent = 'Loading orders…'; message.classList.remove('error');
+      const {data:{user},error:authError} = await db.auth.getUser();
+      if (authError || !user || !owners.includes((user.email || '').toLowerCase())) {
+        message.textContent = 'Sign in through the Admin panel first, then return here.';
+        const link = el('a', 'Open Admin panel'); link.href='admin.html';host.append(link);return;
+      }
+      const {data,error} = await db.from('store_orders').select('checkout_session_id,reference,customer_email,amount_total,currency,items,service_status,purchased_at')
+        .order('purchased_at',{ascending:false}).limit(100);
+      if (error) {message.textContent=`Could not load orders: ${error.message}`;message.classList.add('error');return;}
+      message.textContent = `${data.length} most recent paid order${data.length===1?'':'s'}`;
+      if (!data.length) {host.append(el('p','No orders yet. Confirm your Stripe order webhook is connected.','empty'));return;}
+      data.forEach(order => {
+        const card=el('article','','order-card');
+        const head=el('div','','order-card-head');
+        const left=el('div');left.append(el('strong',order.reference),el('small',order.customer_email));
+        head.append(left,el('strong',money(order.amount_total,order.currency)));card.append(head);
+        const products=Array.isArray(order.items)?order.items.map(item=>`${item.name}${item.quantity>1?` ×${item.quantity}`:''}`).join(' · '):'Stripe purchase';
+        card.append(el('p',products||'Stripe purchase'),el('small',new Date(order.purchased_at).toLocaleString()));
+        const row=el('div','','row');const field=el('div');const label=el('label','Customer page status');
+        const select=document.createElement('select');
+        [['paid','Payment received'],['in_progress','In progress'],['completed','Completed']].forEach(([value,text])=>{
+          const option=el('option',text);option.value=value;select.append(option);
+        });select.value=order.service_status;field.append(label,select);
+        const save=el('button','Save status');save.type='button';
+        save.addEventListener('click',async()=>{
+          save.disabled=true;message.textContent='Saving…';
+          const {error:updateError}=await db.from('store_orders').update({service_status:select.value}).eq('checkout_session_id',order.checkout_session_id);
+          message.textContent=updateError?`Could not save: ${updateError.message}`:'Status saved. Customer page is updated.';
+          message.classList.toggle('error',Boolean(updateError));save.disabled=false;
+        });row.append(field,save);card.append(row);host.append(card);
+      });
+    }
+    document.getElementById('refreshOrders').addEventListener('click',load);
+    load().catch(()=>{message.textContent='Could not load orders. Try refreshing.';message.classList.add('error');});
+  })();
+  </script>
+</body>
+</html>

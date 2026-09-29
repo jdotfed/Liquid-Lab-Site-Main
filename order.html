@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0c0b10">
+  <title>My Order — Liquid Lab</title>
+  <link rel="stylesheet" href="order.css?v=20260929-1">
+</head>
+<body>
+  <header class="top"><a class="brand" href="index.html"><img src="logo.png" alt=""><span>Liquid<span class="accent">Lab</span></span></a><a href="index.html">Back to Store</a></header>
+  <main class="shell">
+    <p class="eyebrow">LIQUID LAB · MY ORDER</p>
+    <h1>Track your purchase</h1>
+    <p class="intro">Your receipt reference matches the one our team sees in the Discord payment log. Keep it handy when opening a ticket.</p>
+
+    <section id="orderPanel" class="panel" hidden aria-live="polite">
+      <div class="order-head"><div><p class="eyebrow">PAYMENT CONFIRMED</p><h2>Your order</h2></div><span id="statusBadge" class="badge">Payment received</span></div>
+      <div class="ref-box"><div><span>Receipt / Customer Reference</span><strong id="orderReference"></strong></div><button type="button" id="copyReference">Copy reference</button></div>
+      <p id="copyMessage" class="small" role="status"></p>
+      <div class="line"><span>Services</span><ul id="orderItems"></ul></div>
+      <div class="line"><span>Total paid</span><strong id="orderAmount"></strong></div>
+      <div class="line"><span>Discord</span><strong id="discordStatus"></strong></div>
+      <h3>Order progress</h3>
+      <ol class="steps" id="progressSteps">
+        <li data-step="paid"><span class="step-icon">1</span><div><strong>Payment received</strong><small>Your purchase is confirmed by Stripe.</small></div></li>
+        <li data-step="in_progress"><span class="step-icon">2</span><div><strong>In progress</strong><small>Our team is handling your service.</small></div></li>
+        <li data-step="completed"><span class="step-icon">3</span><div><strong>Completed</strong><small>Your service is finished.</small></div></li>
+      </ol>
+      <a class="primary" href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer">Open a Discord ticket</a>
+      <p class="small">Paste your reference in the ticket. Staff will verify the payment in Stripe; a number alone is not proof of payment.</p>
+    </section>
+
+    <p id="orderMessage" class="message" role="status" aria-live="polite"></p>
+    <section class="panel lookup">
+      <h2>Find an order</h2>
+      <p class="small">No login needed. Use the email you entered at checkout and the exact reference from your receipt or ticket.</p>
+      <form id="lookupForm">
+        <label for="lookupEmail">Checkout email</label><input id="lookupEmail" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
+        <label for="lookupReference">Receipt / Customer Reference</label><input id="lookupReference" type="text" required maxlength="200" placeholder="Your Stripe receipt number">
+        <button class="primary" type="submit">Find my order</button>
+      </form>
+      <p id="lookupMessage" class="message" role="status"></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="site-config.js?v=20260907"></script>
+  <script src="order.js?v=20260929-1"></script>
+</body>
+</html>
