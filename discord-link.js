@@ -35,7 +35,7 @@
 
   function discordIdentity(user) {
     const identity = user?.identities?.find((item) => item.provider === 'discord');
-    return /^\d{17,20}$/.test(identity?.provider_id || '') ? identity : null;
+    return /^\d{17,20}$/.test(identity?.id || '') ? identity : null;
   }
 
   function showUser(user) {
