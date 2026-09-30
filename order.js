@@ -37,15 +37,7 @@
     if (!items.children.length) {
       const li = document.createElement('li'); li.textContent = 'Stripe purchase'; items.append(li);
     }
-    const states = ['paid', 'in_progress', 'completed'];
-    const current = states.indexOf(order.serviceStatus);
-    document.querySelectorAll('#progressSteps li').forEach((step, index) => {
-      step.classList.toggle('done', index <= Math.max(0, current));
-      step.querySelector('.step-icon').textContent = index <= Math.max(0, current) ? '✓' : String(index + 1);
-    });
-    document.getElementById('statusBadge').textContent = ({
-      paid: 'Payment received', in_progress: 'In progress', completed: 'Completed'
-    })[order.serviceStatus] || 'Payment received';
+    document.getElementById('statusBadge').textContent = 'Payment confirmed';
     panel.hidden = false;
     message.textContent = '';
     document.getElementById('lookupReference').value = order.reference;
@@ -80,12 +72,25 @@
   const sessionId = new URLSearchParams(location.search).get('session_id');
   if (sessionId) {
     message.textContent = 'Confirming your Stripe payment…';
-    request({ action: 'session', sessionId }).then(order => {
-      showOrder(order);
-      try { localStorage.removeItem('liquidlab-cart-v1'); } catch { /* private browsing */ }
-    }).catch(error => {
-      message.textContent = error.message;
-      message.classList.add('error');
-    });
+    async function confirmCheckout() {
+      // Some payment methods settle shortly after the customer returns from Stripe.
+      for (let attempt = 0; attempt < 10; attempt++) {
+        try {
+          const order = await request({ action: 'session', sessionId });
+          showOrder(order);
+          try { localStorage.removeItem('liquidlab-cart-v1'); } catch { /* private browsing */ }
+          return;
+        } catch (error) {
+          if (attempt === 9 || !/processing|not found/i.test(error.message)) {
+            message.textContent = error.message;
+            message.classList.add('error');
+            return;
+          }
+          message.textContent = 'Waiting for Stripe to confirm your payment…';
+          await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+      }
+    }
+    confirmCheckout();
   }
 })();

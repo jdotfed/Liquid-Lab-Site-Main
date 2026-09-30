@@ -14,7 +14,7 @@
   <header class="top"><a class="brand" href="index.html"><img src="logo.png" alt=""><span>Liquid<span class="accent">Lab</span></span></a><a href="admin.html">Store controls</a></header>
   <main class="admin-shell">
     <div class="admin-header"><div><p class="eyebrow">OWNER ACCESS</p><h1>Recent orders</h1></div><div class="admin-actions"><button id="refreshOrders" type="button">Refresh</button><a href="admin.html">Admin panel</a></div></div>
-    <p class="admin-note">These are paid Stripe purchases. Set progress here after your team starts or completes a service. This progress is separate from the Discord bot’s ticket status.</p>
+    <p class="admin-note">Paid Stripe purchases appear here automatically. Service updates stay in your Discord tickets; there is no website status to maintain.</p>
     <p id="adminMessage" class="message" role="status"></p>
     <div id="orders" class="orders" aria-live="polite"></div>
   </main>
@@ -37,7 +37,7 @@
         message.textContent = 'Sign in through the Admin panel first, then return here.';
         const link = el('a', 'Open Admin panel'); link.href='admin.html';host.append(link);return;
       }
-      const {data,error} = await db.from('store_orders').select('checkout_session_id,reference,customer_email,amount_total,currency,items,service_status,purchased_at')
+      const {data,error} = await db.from('store_orders').select('checkout_session_id,reference,customer_email,amount_total,currency,items,purchased_at')
         .order('purchased_at',{ascending:false}).limit(100);
       if (error) {message.textContent=`Could not load orders: ${error.message}`;message.classList.add('error');return;}
       message.textContent = `${data.length} most recent paid order${data.length===1?'':'s'}`;
@@ -49,18 +49,7 @@
         head.append(left,el('strong',money(order.amount_total,order.currency)));card.append(head);
         const products=Array.isArray(order.items)?order.items.map(item=>`${item.name}${item.quantity>1?` ×${item.quantity}`:''}`).join(' · '):'Stripe purchase';
         card.append(el('p',products||'Stripe purchase'),el('small',new Date(order.purchased_at).toLocaleString()));
-        const row=el('div','','row');const field=el('div');const label=el('label','Customer page status');
-        const select=document.createElement('select');
-        [['paid','Payment received'],['in_progress','In progress'],['completed','Completed']].forEach(([value,text])=>{
-          const option=el('option',text);option.value=value;select.append(option);
-        });select.value=order.service_status;field.append(label,select);
-        const save=el('button','Save status');save.type='button';
-        save.addEventListener('click',async()=>{
-          save.disabled=true;message.textContent='Saving…';
-          const {error:updateError}=await db.from('store_orders').update({service_status:select.value}).eq('checkout_session_id',order.checkout_session_id);
-          message.textContent=updateError?`Could not save: ${updateError.message}`:'Status saved. Customer page is updated.';
-          message.classList.toggle('error',Boolean(updateError));save.disabled=false;
-        });row.append(field,save);card.append(row);host.append(card);
+        card.append(el('small','Payment confirmed by Stripe'));host.append(card);
       });
     }
     document.getElementById('refreshOrders').addEventListener('click',load);
