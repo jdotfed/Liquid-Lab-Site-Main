@@ -156,6 +156,14 @@
     .discord-link-actions button:disabled{opacity:.6;cursor:wait;}
     .discord-link-actions #discordDisconnect{background:transparent;border-color:#50465d;}
     .discord-link-panel [hidden]{display:none !important;}
+    .bo2-price-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:3px;}
+    .bo2-price-row strong{margin:0;}
+    .bo2-platform{
+      display:inline-flex;align-items:center;white-space:nowrap;
+      padding:4px 7px;border:1px solid rgba(167,110,255,.48);border-radius:999px;
+      background:rgba(137,49,240,.14);color:#dec5ff;
+      font-size:10px;font-weight:800;letter-spacing:.04em;line-height:1;
+    }
   </style>
 
 </head>
@@ -517,7 +525,7 @@
             <img src="products/bo2-normal-prestige.png" alt="BO2 Normal Prestige and Levels" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">BO2</div>
           </div>
-          <div class="product-meta"><span>NORMAL PRESTIGE • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <div class="product-meta"><span>NORMAL PRESTIGE</span><span class="stock"><i></i> AVAILABLE</span></div>
           <h3>BO2 Normal Prestige / Levels</h3>
           <p>Choose any normal prestige from Prestige 1 through Master and receive Level 55.</p>
           <ul>
@@ -534,7 +542,7 @@
           </div>
           <p id="bo2NormalDetails" class="package-details">Choose any normal prestige from Prestige 1 through Master • Level 55 included</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="bo2NormalPrice">$10.00</strong></div>
+            <div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2NormalPrice">$10.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div>
             <a href="https://buy.stripe.com/cNieV5ajRdv08tj8an5AQ1o" class="buy-btn sellix-link" id="bo2NormalBuy">Buy Product <span>→</span></a>
           </div>
         </article>
@@ -545,7 +553,7 @@
             <img src="products/bo2-modded-prestige.png" alt="BO2 Modded Prestige and Levels" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">MP</div>
           </div>
-          <div class="product-meta"><span>MODDED PRESTIGE • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <div class="product-meta"><span>MODDED PRESTIGE</span><span class="stock"><i></i> AVAILABLE</span></div>
           <h3>BO2 Modded Prestige / Levels</h3>
           <p>Select a modded prestige from Prestige 12 through 9999 and receive Level 55.</p>
           <ul>
@@ -562,7 +570,7 @@
           </div>
           <p id="bo2ModdedDetails" class="package-details">Choose any modded prestige from Prestige 12 through 9999 • Level 55 included</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="bo2ModdedPrice">$15.00</strong></div>
+            <div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2ModdedPrice">$15.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div>
             <a href="https://buy.stripe.com/eVq7sD3VtfD88tj76j5AQ1q" class="buy-btn sellix-link" id="bo2ModdedBuy">Buy Product <span>→</span></a>
           </div>
         </article>
@@ -573,7 +581,7 @@
             <img src="products/bo2-class-modifications.png" alt="BO2 Class Modifications" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">CLS</div>
           </div>
-          <div class="product-meta"><span>CLASS MODIFICATIONS • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <div class="product-meta"><span>CLASS MODIFICATIONS</span><span class="stock"><i></i> AVAILABLE</span></div>
           <h3>BO2 Class Modifications</h3>
           <p>Preset and custom class modifications, stats, and colored classes.</p>
           <div class="bot-lobby-selector" style="margin:14px 0 10px;">
@@ -587,7 +595,7 @@
           </div>
           <p id="bo2ClassDetails" class="package-details">10 preset modded classes shown in your ticket • Double DSR, Ballista, XPR, SVU, Riot Shield, and more</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="bo2ClassPrice">$15.00</strong></div>
+            <div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2ClassPrice">$15.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div>
             <a href="https://buy.stripe.com/00w6ozbnVaiO6lbeyL5AQ1s" class="buy-btn sellix-link" id="bo2ClassBuy">Buy Product <span>→</span></a>
           </div>
         </article>
@@ -598,7 +606,7 @@
             <img src="products/bo2-unlock-packages.png" alt="BO2 Unlock All Packages" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">PKG</div>
           </div>
-          <div class="product-meta"><span>COMPLETE PACKAGES • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <div class="product-meta"><span>COMPLETE PACKAGES</span><span class="stock"><i></i> AVAILABLE</span></div>
           <h3>BO2 Unlock All Packages</h3>
           <p>Complete normal or modded progression packages with discounted extras available.</p>
           <ul>
@@ -615,7 +623,7 @@
           </div>
           <p id="bo2PackageDetails" class="package-details">Prestige 1–Master + Level 55 • Unlock All calling cards, camos, and max weapon levels • Colored classes with custom text and color</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="bo2PackagePrice">$25.00</strong></div>
+            <div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2PackagePrice">$25.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div>
             <a href="https://buy.stripe.com/14A3cn77F0Ie24VcqD5AQ1w" class="buy-btn sellix-link" id="bo2PackageBuy">Buy Product <span>→</span></a>
           </div>
         </article>
@@ -626,7 +634,7 @@
             <img src="products/bo2-extras-singles.png" alt="BO2 Extras and Single Services" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">+</div>
           </div>
-          <div class="product-meta"><span>EXTRAS &amp; SINGLES • PS4 / PS5</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <div class="product-meta"><span>EXTRAS &amp; SINGLES</span><span class="stock"><i></i> AVAILABLE</span></div>
           <h3>BO2 Extras / Singles</h3>
           <p>Purchase individual unlocks, trophies, weapon levels, camos, calling cards, or emblems.</p>
           <div class="bot-lobby-selector" style="margin:14px 0 10px;">
@@ -641,7 +649,7 @@
           </div>
           <p id="bo2ExtrasDetails" class="package-details">Unlock all BO2 trophies, including the Platinum Trophy, on PS4/PS5</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="bo2ExtrasPrice">$5.00</strong></div>
+            <div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2ExtrasPrice">$5.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div>
             <a href="https://buy.stripe.com/5kQfZ977F1Mi5h72Q35AQ1n" class="buy-btn sellix-link" id="bo2ExtrasBuy">Buy Product <span>→</span></a>
           </div>
         </article>
