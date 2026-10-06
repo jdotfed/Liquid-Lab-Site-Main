@@ -10,12 +10,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css?v=20260908-sale1">
+  <style>
+    .admin-home-button{display:inline-flex;align-items:center;justify-content:center;padding:11px 13px;border:1px solid #7a00ff;border-radius:8px;background:#190a2c;color:#fff;font:700 11px Inter,system-ui,sans-serif;white-space:nowrap;text-decoration:none;transition:background .2s}
+    .admin-home-button:hover{background:#7a00ff;color:#fff}
+    .admin-home-button:focus-visible{outline:2px solid #b577ff;outline-offset:4px}
+    .admin-header{gap:12px}
+    .admin-header>.header-actions{flex-wrap:wrap;justify-content:flex-end}
+    @media(max-width:600px){.admin-header{flex-wrap:wrap}.admin-header>.header-actions{margin-left:auto;max-width:100%;gap:8px}}
+  </style>
 </head>
 <body>
   <main class="admin-shell">
     <header class="admin-header">
       <a class="brand" href="index.html"><img src="logo.png" alt="Liquid Lab"><span>LIQUID LAB</span></a>
       <div class="header-actions">
+        <a class="admin-home-button" href="index.html">Home</a>
         <span id="ownerIdentity" class="owner-identity"></span>
         <button id="signOutButton" class="ghost-button" type="button" hidden>Sign Out</button>
       </div>
