@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=20260908-sale1" />
   <link rel="stylesheet" href="cart.css?v=20260929-cart1" />
+  <link rel="stylesheet" href="bo2-zombies.css?v=20261005" />
 
   <style>
     .policy-modal{
@@ -520,7 +521,7 @@
           </div>
         </article>
 
-        <article class="product-card" data-category="bo2" data-product-id="bo2-normal-prestige">
+        <article class="product-card" data-category="bo2" data-subcategory="multiplayer" data-product-id="bo2-normal-prestige">
           <div class="badge hot">BO2 MULTIPLAYER</div>
           <div class="product-image">
             <img src="products/bo2-normal-prestige.png" alt="BO2 Normal Prestige and Levels" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
@@ -548,7 +549,7 @@
           </div>
         </article>
 
-        <article class="product-card" data-category="bo2" data-product-id="bo2-modded-prestige">
+        <article class="product-card" data-category="bo2" data-subcategory="multiplayer" data-product-id="bo2-modded-prestige">
           <div class="badge hot">MODDED PRESTIGE</div>
           <div class="product-image">
             <img src="products/bo2-modded-prestige.png" alt="BO2 Modded Prestige and Levels" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
@@ -576,7 +577,7 @@
           </div>
         </article>
 
-        <article class="product-card" data-category="bo2" data-product-id="bo2-class-modifications">
+        <article class="product-card" data-category="bo2" data-subcategory="multiplayer" data-product-id="bo2-class-modifications">
           <div class="badge hot">CUSTOM CLASSES</div>
           <div class="product-image">
             <img src="products/bo2-class-modifications.png" alt="BO2 Class Modifications" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
@@ -601,7 +602,7 @@
           </div>
         </article>
 
-        <article class="product-card featured" data-category="bo2" data-product-id="bo2-unlock-packages">
+        <article class="product-card featured" data-category="bo2" data-subcategory="multiplayer" data-product-id="bo2-unlock-packages">
           <div class="badge popular">BO2 PACKAGES</div>
           <div class="product-image">
             <img src="products/bo2-unlock-packages.png" alt="BO2 Unlock All Packages" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
@@ -629,7 +630,7 @@
           </div>
         </article>
 
-        <article class="product-card" data-category="bo2" data-product-id="bo2-extras-singles">
+        <article class="product-card" data-category="bo2" data-subcategory="multiplayer" data-product-id="bo2-extras-singles">
           <div class="badge hot">EXTRAS &amp; SINGLES</div>
           <div class="product-image">
             <img src="products/bo2-extras-singles.png" alt="BO2 Extras and Single Services" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
@@ -653,6 +654,67 @@
             <div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2ExtrasPrice">$5.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div>
             <a href="https://buy.stripe.com/5kQfZ977F1Mi5h72Q35AQ1n" class="buy-btn sellix-link" id="bo2ExtrasBuy">Buy Product <span>→</span></a>
           </div>
+        </article>
+
+        <article class="product-card bo2-zombies" data-category="bo2" data-subcategory="zombies" data-product-id="bo2-zm-recovery">
+          <div class="badge hot">BO2 ZOMBIES</div>
+          <div class="product-image"><img src="products/bo2-zm-recovery.png" alt="BO2 Zombies Recovery Packages" loading="lazy"></div>
+          <div class="product-meta"><span>RECOVERY PACKAGES</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Zombies Recovery</h3>
+          <p>Full progression or the essentials. Choose your recovery package below.</p>
+          <div class="bot-lobby-selector"><label for="bo2ZmRecoveryOption">SELECT PACKAGE</label>
+            <select id="bo2ZmRecoveryOption">
+              <option value="20" data-control-index="0" data-checkout-key="fullRecovery" data-link="https://buy.stripe.com/6oU6oz0Jh76CgZPbmz5AQ1B" data-ticket="false" data-details="Max Rank / Tallies / Navcards • Max Bank (200K) • EE Quest completed • Orange or Blue Navcard option on Buried only">Full Recovery — $20</option>
+              <option value="15" data-control-index="1" data-checkout-key="semiRecovery" data-link="https://buy.stripe.com/14A7sD0Jh3UqgZP9er5AQ1C" data-ticket="false" data-details="Max Rank + Max Bank">Semi Recovery — $15</option>
+            </select>
+          </div>
+          <p class="package-details" id="bo2ZmRecoveryDetails">Max Rank / Tallies / Navcards • Max Bank (200K) • EE Quest completed • Orange or Blue Navcard option on Buried only</p>
+          <details class="zm-info" id="bo2ZmNavcards"><summary>Orange or Blue Navcards? <span>Buried only</span></summary>
+            <img class="zm-navcard-image" src="products/bo2-zm-navcards.png" alt="BO2 Zombies Orange and Blue Navcards" loading="lazy">
+            <div class="zm-navcard-options">
+              <div><h4>Orange · Maxis</h4><p>Orange-eyed zombies, increased power-up drop rates, and a special Richtofen zombie that guarantees a power-up when killed.</p></div>
+              <div><h4>Blue · Richtofen</h4><p>Blue-eyed zombies, permanent Fire Sale with 10-point Mystery Boxes at every location, and four-weapon Mule Kick.</p></div>
+            </div>
+            <p>Included with Full Recovery. Tell us your choice in your order ticket.</p>
+          </details>
+          <div class="product-bottom"><div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2ZmRecoveryPrice">$20.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div><a class="buy-btn sellix-link" id="bo2ZmRecoveryBuy" href="https://buy.stripe.com/6oU6oz0Jh76CgZPbmz5AQ1B">Buy Product <span>→</span></a></div>
+        </article>
+
+        <article class="product-card bo2-zombies" data-category="bo2" data-subcategory="zombies" data-product-id="bo2-zm-unlocks">
+          <div class="badge hot">BO2 ZOMBIES</div>
+          <div class="product-image"><img src="products/bo2-zm-unlocks.png" alt="BO2 Zombies Individual Unlocks" loading="lazy"></div>
+          <div class="product-meta"><span>INDIVIDUAL UNLOCKS</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Zombies Individual Unlocks</h3>
+          <p>Pick the upgrade you need, or build custom stats with our team.</p>
+          <div class="bot-lobby-selector"><label for="bo2ZmUnlockOption">SELECT UNLOCK</label>
+            <select id="bo2ZmUnlockOption">
+              <option value="10" data-control-index="0" data-checkout-key="maxRank" data-link="https://buy.stripe.com/4gM7sD4Zx3Uq6lb62f5AQ1D" data-ticket="false" data-details="Max Rank only • Shotgun / Blue eyes">Max Rank — $10</option>
+              <option value="5" data-control-index="1" data-checkout-key="maxBank" data-link="https://buy.stripe.com/dRm3cn9fNgHceRH1LZ5AQ1E" data-ticket="false" data-details="Max Bank only • 200K bank balance">Max Bank — $5</option>
+              <option value="5" data-control-index="2" data-ticket-only="true" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Custom Stats • May affect your rank • Build your stats and share them in your ticket">Custom Stats — $5 · Open Ticket</option>
+            </select>
+          </div>
+          <p class="package-details" id="bo2ZmUnlockDetails">Max Rank only • Shotgun / Blue eyes</p>
+          <p class="zm-stats-help" id="bo2ZmStatsHelp" hidden><a href="https://bo2.statseditor.com/" target="_blank" rel="noopener">Build your custom stats ↗</a>, then share them in your ticket. Custom stats may affect your rank.</p>
+          <div class="product-bottom"><div class="price"><small>PRICE</small><div class="bo2-price-row"><strong id="bo2ZmUnlockPrice">$10.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div><a class="buy-btn sellix-link" id="bo2ZmUnlockBuy" href="https://buy.stripe.com/4gM7sD4Zx3Uq6lb62f5AQ1D">Buy Product <span>→</span></a></div>
+        </article>
+
+        <article class="product-card bo2-zombies" data-category="bo2" data-subcategory="zombies" data-product-id="bo2-zm-perks">
+          <div class="badge hot">BO2 ZOMBIES</div>
+          <div class="product-image"><img src="products/bo2-zm-perks.png" alt="BO2 Zombies Perma Perks" loading="lazy"></div>
+          <div class="product-meta"><span>PERMA PERKS</span><span class="stock"><i></i> AVAILABLE</span></div>
+          <h3>BO2 Zombies Perma Perks</h3>
+          <p>Get all 14 perks together, or open a ticket for individual perks.</p>
+          <div class="bot-lobby-selector"><label for="bo2ZmPerksOption">SELECT PERKS</label>
+            <select id="bo2ZmPerksOption">
+              <option value="15" data-control-index="0" data-checkout-key="allPerks" data-link="https://buy.stripe.com/bJefZ963B1Mi4d3cqD5AQ1F" data-ticket="false" data-details="All 14 Perma Perks included in one bundle">All 14 Perma Perks Bundle — $15</option>
+              <option value="3" data-control-index="1" data-ticket-only="true" data-ticket="true" data-link="https://discord.gg/liquidlab" data-details="Individual Perma Perks • $3 each • Choose your perks in your ticket">Individual Perma Perks — $3 each · Open Ticket</option>
+            </select>
+          </div>
+          <p class="package-details" id="bo2ZmPerksDetails">All 14 Perma Perks included in one bundle</p>
+          <details class="zm-info"><summary>View all 14 perks</summary><ul class="zm-perk-list">
+            <li>Stronger Barriers</li><li>Faster Revive</li><li>Headshot Damage</li><li>Perk Refund (Cash Back)</li><li>Red Insta-Kill</li><li>Extra Health</li><li>Stronger Carpenter</li><li>PHD Flopper</li><li>Keep Perks after down</li><li>Pistol Points</li><li>Double Point Discount</li><li>Sniper Points</li><li>Mystery Box Upgrade</li><li>Ray Gun Wall Buy</li>
+          </ul></details>
+          <div class="product-bottom"><div class="price"><small id="bo2ZmPerksPriceLabel">PRICE</small><div class="bo2-price-row"><strong id="bo2ZmPerksPrice">$15.00</strong><span class="bo2-platform">PS4 / PS5</span></div></div><a class="buy-btn sellix-link" id="bo2ZmPerksBuy" href="https://buy.stripe.com/bJefZ963B1Mi4d3cqD5AQ1F">Buy Product <span>→</span></a></div>
         </article>
 
         <article class="product-card" data-category="bo3" data-subcategory="divinium" data-product-id="bo3-liquid-divinium">
@@ -1422,7 +1484,7 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20261005"></script>
   <script>
     (() => {
       const selectors = [
@@ -1727,6 +1789,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
+  <script src="bo2-zombies-links.js?v=20261005-checkout1"></script>
+  <script src="bo2-zombies.js?v=20261005-checkout1"></script>
   <script src="product-status.js?v=20260929-cart1"></script>
   <script src="discord-link.js?v=20260929-cart1"></script>
   <script src="cart.js?v=20260929-cart1"></script>

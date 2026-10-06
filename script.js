@@ -20,6 +20,10 @@ document.querySelectorAll('.product-card[data-paused="true"]').forEach(card => {
 // show a row of subcategory chips. "key" must match the data-subcategory
 // attribute on the matching .product-card elements.
 const subcategoryMap = {
+  bo2: [
+    { key: 'multiplayer', label: 'Multiplayer' },
+    { key: 'zombies', label: 'Zombies' }
+  ],
   bo3: [
     { key: 'divinium', label: 'Divinium' },
     { key: 'crypto', label: 'Crypto Keys' },

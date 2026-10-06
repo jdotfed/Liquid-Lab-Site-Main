@@ -1,0 +1,19 @@
+.bo2-zombies{min-width:0}
+.bo2-zombies .product-image img{height:auto;aspect-ratio:2.59;object-fit:contain;background:#080808}
+.bo2-zombies .bot-lobby-selector{margin:14px 0 10px}
+.bo2-zombies label{display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em}
+.bo2-zombies select{width:100%;max-width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;font-size:13px}
+.bo2-zombies .package-details{color:#aaaab1;min-height:40px}
+.zm-info{border:1px solid #32223f;border-radius:8px;background:#100d14;margin:0 0 18px;padding:12px 14px}
+.zm-info summary{cursor:pointer;font-size:11px;font-weight:700;color:#d9c4ed;line-height:1.6}
+.zm-info summary span{font-size:9px;color:#aaaab1;margin-left:7px}
+.zm-info p{margin:10px 0 0;line-height:1.7}
+.zm-info h4{font-size:12px;color:#b16aff;margin:14px 0 4px}
+.zm-navcard-image{display:block;width:100%;height:auto;border-radius:6px;margin:14px 0 0}
+.zm-perk-list{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;padding-top:8px!important}
+.zm-stats-help a{color:#c493ff;text-decoration:underline;text-underline-offset:3px}
+.bo2-zombies .buy-btn,.zm-info summary,.bo2-zombies select,.zm-stats-help a{position:relative;z-index:1}
+.bo2-zombies [hidden]{display:none!important}
+.bo2-zombies select:focus-visible,.zm-info summary:focus-visible,.bo2-zombies a:focus-visible{outline:2px solid #b16aff;outline-offset:4px}
+@media(max-width:400px){.bo2-zombies .product-bottom{gap:12px;flex-wrap:wrap}.zm-perk-list{grid-template-columns:1fr}.bo2-zombies select{font-size:12px}}
+@media(max-width:600px){.nav-shell .nav{height:auto;min-height:78px;flex-wrap:wrap;gap:10px;padding-block:12px}.nav-shell .nav-actions{margin-left:auto;flex-wrap:wrap;gap:8px}.nav-shell .ll-mobile-reviews{margin-right:0}}
