@@ -1,0 +1,7 @@
+.ll-admin-shortcut{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;padding:11px 13px;border:1px solid #7a00ff;border-radius:8px;background:#190a2c;color:#fff;font:700 11px Inter,system-ui,sans-serif;white-space:nowrap;text-decoration:none;position:relative;z-index:1;transition:background .2s}
+.ll-admin-shortcut:hover{background:#7a00ff;color:#fff}
+.ll-admin-shortcut:focus-visible{outline:2px solid #b577ff;outline-offset:4px}
+.nav-links .ll-admin-shortcut{padding:10px 12px;color:#fff}
+.hero-orbit{overflow:hidden}
+@media(min-width:801px) and (max-width:1100px){.nav-shell .nav-links{gap:14px}.nav-shell .nav-actions{gap:8px}.nav-shell .brand{font-size:18px}.nav-shell .brand-mark-img{width:42px;height:42px}}
+@media(max-width:600px){.nav-shell .nav-actions{max-width:100%;min-width:0}.nav-shell .ll-admin-shortcut{padding:10px;font-size:10px}.nav-links .ll-admin-shortcut{padding:8px 9px;font-size:10px}}
