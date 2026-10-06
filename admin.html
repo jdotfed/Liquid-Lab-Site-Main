@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#090909">
-  <title>Liquid Lab — Owner Panel</title>
+  <title>Liquid Lab — Admin Panel</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css?v=20260908-sale1">
+  <link rel="stylesheet" href="admin-access.css?v=20261006">
   <style>
     .admin-home-button{display:inline-flex;align-items:center;justify-content:center;padding:11px 13px;border:1px solid #7a00ff;border-radius:8px;background:#190a2c;color:#fff;font:700 11px Inter,system-ui,sans-serif;white-space:nowrap;text-decoration:none;transition:background .2s}
     .admin-home-button:hover{background:#7a00ff;color:#fff}
@@ -31,11 +32,11 @@
     </header>
 
     <section id="loginView" class="login-card">
-      <p class="eyebrow">OWNER ACCESS</p>
+      <p class="eyebrow">ADMIN ACCESS</p>
       <h1>Store Control Panel</h1>
-      <p>Enter an approved owner email. We’ll send a secure sign-in link.</p>
+      <p>Enter an email approved by an owner. We’ll send a secure sign-in link.</p>
       <form id="loginForm">
-        <label for="email">Owner email</label>
+        <label for="email">Approved email</label>
         <input id="email" name="email" type="email" autocomplete="email" placeholder="owner@email.com" required>
         <button class="primary-button" type="submit">Send Secure Login Link</button>
       </form>
@@ -46,11 +47,30 @@
       <div class="dashboard-title">
         <div><p class="eyebrow">LIVE STORE CONTROLS</p><h1>Product Availability</h1></div>
         <div class="header-actions">
-          <a class="ghost-button" href="orders-admin.html" style="display:inline-flex;align-items:center;text-decoration:none">Recent Purchases</a>
+          <a class="ghost-button" id="recentPurchasesLink" href="orders-admin.html" style="display:inline-flex;align-items:center;text-decoration:none">Recent Purchases</a>
           <button id="refreshButton" class="ghost-button" type="button">Refresh</button>
         </div>
       </div>
       <p class="dashboard-note">Changes save immediately and update the public store on its next page load.</p>
+
+      <section id="adminAccessPanel" class="admin-access-panel" hidden aria-labelledby="adminAccessHeading">
+        <div class="section-heading"><h2 id="adminAccessHeading">Manage Admins</h2><span id="adminAccessCount">Owner controls</span></div>
+        <p class="admin-access-note">Add an email and choose what that person can do. Only owners can manage access. Owner accounts keep full access.</p>
+        <form id="adminAccessForm" class="admin-access-form">
+          <label for="adminAccessEmail">Admin email</label>
+          <input id="adminAccessEmail" type="email" autocomplete="off" maxlength="254" required placeholder="person@example.com">
+          <fieldset class="admin-permissions"><legend>Allowed actions</legend>
+            <label><input type="checkbox" name="permission" value="availability">Pause / unpause products and options</label>
+            <label><input type="checkbox" name="permission" value="sales">Manage sales and discounts</label>
+            <label><input type="checkbox" name="permission" value="announcements">Manage announcements</label>
+            <label><input type="checkbox" name="permission" value="view_orders">View purchases</label>
+            <label><input type="checkbox" name="permission" value="update_orders">Update order status</label>
+          </fieldset>
+          <div class="admin-access-form-actions"><button id="saveAdminAccess" class="primary-button" type="submit">Add Admin</button><button id="cancelAdminEdit" class="ghost-button" type="button" hidden>Cancel edit</button></div>
+        </form>
+        <p id="adminAccessMessage" class="message" role="status" aria-live="polite"></p>
+        <div id="adminAccessList" class="admin-access-list" aria-live="polite"></div>
+      </section>
 
       <section class="announcement-panel">
         <div class="section-heading"><h2>Site Announcement</h2><span>Top-of-page banner</span></div>
@@ -72,7 +92,7 @@
       <div id="productGrid" class="admin-products" aria-live="polite"></div>
 
       <section class="history-panel">
-        <div class="section-heading"><h2>Recent Changes</h2><span>Owner activity</span></div>
+        <div class="section-heading"><h2>Recent Changes</h2><span>Admin activity</span></div>
         <div id="historyList" class="history-list"></div>
       </section>
       <p id="dashboardMessage" class="message" role="status"></p>
@@ -81,6 +101,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
-  <script src="admin.js?v=20260908-sale1"></script>
+  <script src="admin.js?v=20261006-access1"></script>
 </body>
 </html>

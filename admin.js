@@ -27,11 +27,27 @@
     return;
   }
 
-  const owners = config.ownerEmails.map(email => email.toLowerCase());
   const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey);
   let expandedProductId = '';
+  let access = null;
+  let accessGeneration = 0;
+  let accessRefreshGeneration = 0;
+  let editingAdmin = '';
+  let accessRows = [];
+  let accessListGeneration = 0;
+  const accessPanel = document.getElementById('adminAccessPanel');
+  const accessForm = document.getElementById('adminAccessForm');
+  const accessEmail = document.getElementById('adminAccessEmail');
+  const accessList = document.getElementById('adminAccessList');
+  const accessMessage = document.getElementById('adminAccessMessage');
+  const saveAccess = document.getElementById('saveAdminAccess');
+  const cancelEdit = document.getElementById('cancelAdminEdit');
+  const permissionLabels = {
+    availability: 'Product availability', sales: 'Sales and discounts',
+    announcements: 'Announcements', view_orders: 'View purchases', update_orders: 'Update order status'
+  };
 
-  function isOwner(email) { return owners.includes((email || '').toLowerCase()); }
+  function can(permission) { return access?.role === 'owner' || access?.permissions?.includes(permission); }
   function showMessage(element, text, error = false) {
     element.textContent = text;
     element.classList.toggle('error', error);
@@ -42,27 +58,60 @@
   }
 
   async function renderDashboard(session) {
-    const email = session?.user?.email || '';
-    if (!session || !isOwner(email)) {
-      if (session) await db.auth.signOut();
-      loginView.hidden = false;
-      dashboardView.hidden = true;
+    const current = ++accessGeneration;
+    access = null;
+    ++accessListGeneration;
+    accessPanel.hidden = true;
+    accessList.replaceChildren();
+    accessRows = [];
+    dashboardView.hidden = true;
+    loginView.hidden = false;
+    ownerIdentity.textContent = '';
+    if (!session) {
       signOutButton.hidden = true;
-      ownerIdentity.textContent = '';
-      if (session) showMessage(loginMessage, 'This account is not approved for owner access.', true);
       return;
     }
-
-    loginView.hidden = true;
-    dashboardView.hidden = false;
     signOutButton.hidden = false;
-    ownerIdentity.textContent = email;
-    await loadDashboard();
+    try {
+      const { data: identity, error: identityError } = await db.auth.getUser();
+      if (current !== accessGeneration) return;
+      if (identityError || !identity?.user) throw new Error('Your login could not be verified. Sign in again.');
+      const { data, error } = await db.rpc('liquidlab_my_admin_access');
+      if (current !== accessGeneration) return;
+      if (error) throw new Error('Admin access could not be checked. Run ADMIN-ACCESS.sql or try again shortly.');
+      if (!data || !['owner','admin'].includes(data.role)) {
+        showMessage(loginMessage, 'This email does not have admin access. Ask an owner to add it.', true);
+        await db.auth.signOut();
+        return;
+      }
+      access = data;
+      loginView.hidden = true;
+      dashboardView.hidden = false;
+      ownerIdentity.textContent = `${identity.user.email} · ${access.role === 'owner' ? 'Owner' : 'Admin'}`;
+      document.querySelector('.announcement-panel').hidden = !can('announcements');
+      document.getElementById('recentPurchasesLink').hidden = !can('view_orders');
+      // An existing inline display style must not override hidden.
+      document.getElementById('recentPurchasesLink').style.display = can('view_orders') ? 'inline-flex' : 'none';
+      accessPanel.hidden = access.role !== 'owner';
+      resetAdminForm();
+      await Promise.all([loadDashboard(), access.role === 'owner' ? loadAdminList() : Promise.resolve()]);
+    } catch (error) {
+      if (current !== accessGeneration) return;
+      loginView.hidden = false;
+      dashboardView.hidden = true;
+      showMessage(loginMessage, error.message || 'Admin access could not be verified.', true);
+    }
   }
 
   function statusButtons(currentStatus, onChange) {
     const actions = document.createElement('div');
     actions.className = 'status-actions';
+    if (!can('availability')) {
+      const label = document.createElement('span');
+      label.textContent = currentStatus === 'paused' ? 'Paused' : 'Available';
+      actions.append(label);
+      return actions;
+    }
     ['available', 'paused'].forEach(nextStatus => {
       const button = document.createElement('button');
       button.type = 'button';
@@ -75,6 +124,7 @@
   }
 
   function saleEditor(record, table, idColumn, idValue, row) {
+    if (!can('sales')) return document.createDocumentFragment();
     const panel = document.createElement('details');
     panel.className = `sale-editor ${record.sale_enabled ? 'sale-live' : ''}`;
 
@@ -186,6 +236,8 @@
   }
 
   async function loadDashboard() {
+    const current = accessGeneration;
+    if (!access) return;
     showMessage(dashboardMessage, '');
     productGrid.innerHTML = '<p class="empty">Loading products…</p>';
     const [{ data: products, error: productError }, { data: options, error: optionError }, { data: history, error: historyError }] = await Promise.all([
@@ -193,8 +245,10 @@
       db.from('product_option_controls').select('id,product_id,option_index,option_name,status,sale_enabled,sale_price,sale_label,sale_link').order('option_index'),
       db.from('product_change_log').select('product_name,old_status,new_status,changed_by,changed_at').order('changed_at', { ascending: false }).limit(25)
     ]);
+    if (current !== accessGeneration || !access) return;
 
     await loadAnnouncement();
+    if (current !== accessGeneration || !access) return;
 
     if (productError) {
       productGrid.innerHTML = '';
@@ -208,7 +262,7 @@
 
     historyList.innerHTML = '';
     if (historyError || !history?.length) {
-      historyList.innerHTML = '<p class="empty">No owner changes yet.</p>';
+      historyList.innerHTML = '<p class="empty">No admin changes yet.</p>';
       return;
     }
     history.forEach(item => {
@@ -230,6 +284,7 @@
   }
 
   async function loadAnnouncement() {
+    if (!can('announcements')) return;
     const { data, error } = await db.from('site_announcement').select('*').eq('id', 1).maybeSingle();
     if (error) {
       showMessage(announcementMessageStatus, `Could not load announcement: ${error.message}`, true);
@@ -264,14 +319,14 @@
       button_url: announcementButtonUrl.value.trim()
     }).eq('id', 1).select('id').maybeSingle();
     saveAnnouncementButton.disabled = false;
-    const saveError = error || (!savedAnnouncement ? new Error('Supabase did not update the announcement. Run ADMIN-PERMISSIONS-REPAIR.sql.') : null);
+    const saveError = error || (!savedAnnouncement ? new Error('Supabase did not update the announcement. Refresh your permissions or run ADMIN-ACCESS.sql.') : null);
     showMessage(announcementMessageStatus, saveError ? `Could not publish: ${saveError.message}` : 'Published. Refresh the public website to see it.', Boolean(saveError));
   }
 
   async function updateStatus(productId, status, row) {
     row.querySelectorAll('button').forEach(button => button.disabled = true);
     const { data: savedProduct, error } = await db.from('product_controls').update({ status }).eq('product_id', productId).select('product_id').maybeSingle();
-    const saveError = error || (!savedProduct ? new Error('Supabase did not update this product. Run ADMIN-PERMISSIONS-REPAIR.sql.') : null);
+    const saveError = error || (!savedProduct ? new Error('Supabase did not update this product. Refresh your permissions or run ADMIN-ACCESS.sql.') : null);
     if (saveError) {
       showMessage(dashboardMessage, `Could not save: ${saveError.message}`, true);
       row.querySelectorAll('button').forEach(button => button.disabled = false);
@@ -284,7 +339,7 @@
   async function updateOptionStatus(optionId, status, row) {
     row.querySelectorAll('button').forEach(button => button.disabled = true);
     const { data: savedOption, error } = await db.from('product_option_controls').update({ status }).eq('id', optionId).select('id').maybeSingle();
-    const saveError = error || (!savedOption ? new Error('Supabase did not update this option. Run ADMIN-PERMISSIONS-REPAIR.sql.') : null);
+    const saveError = error || (!savedOption ? new Error('Supabase did not update this option. Refresh your permissions or run ADMIN-ACCESS.sql.') : null);
     if (saveError) {
       showMessage(dashboardMessage, `Could not save option: ${saveError.message}`, true);
       row.querySelectorAll('button').forEach(button => button.disabled = false);
@@ -297,7 +352,7 @@
   async function updateSale(table, idColumn, idValue, payload, row) {
     row.querySelectorAll('.sale-form button').forEach(button => button.disabled = true);
     const { data, error } = await db.from(table).update(payload).eq(idColumn, idValue).select(idColumn).maybeSingle();
-    const saveError = error || (!data ? new Error('Supabase did not update this sale. Run SALES-SETUP.sql.') : null);
+    const saveError = error || (!data ? new Error('Supabase did not update this sale. Refresh your permissions or run ADMIN-ACCESS.sql.') : null);
     if (saveError) {
       showMessage(dashboardMessage, `Could not save sale: ${saveError.message}`, true);
       row.querySelectorAll('.sale-form button').forEach(button => button.disabled = false);
@@ -310,20 +365,122 @@
   loginForm.addEventListener('submit', async event => {
     event.preventDefault();
     const email = loginForm.email.value.trim().toLowerCase();
-    if (!isOwner(email)) {
-      showMessage(loginMessage, 'That email is not approved for owner access.', true);
-      return;
-    }
     showMessage(loginMessage, 'Sending secure login link…');
     const redirectTo = new URL('admin.html', window.location.href).href.split('#')[0].split('?')[0];
-    const { error } = await db.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo } });
+    const { error } = await db.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo, shouldCreateUser: true } });
     showMessage(loginMessage, error ? error.message : 'Check your email and click the secure login link.', Boolean(error));
   });
 
   signOutButton.addEventListener('click', async () => { await db.auth.signOut(); });
-  refreshButton.addEventListener('click', loadDashboard);
+  refreshButton.addEventListener('click', () => { void refreshAccess(true); });
   announcementForm.addEventListener('submit', saveAnnouncement);
   [announcementTitleInput, announcementMessageInput, announcementStyle].forEach(input => input.addEventListener('input', updateAnnouncementPreview));
-  db.auth.onAuthStateChange((_event, session) => { setTimeout(() => renderDashboard(session), 0); });
+  db.auth.onAuthStateChange((event, session) => {
+    setTimeout(() => {
+      if (access && session && ['TOKEN_REFRESHED','SIGNED_IN'].includes(event)) void refreshAccess();
+      else void renderDashboard(session);
+    }, 0);
+  });
   db.auth.getSession().then(({ data }) => renderDashboard(data.session));
+  async function refreshAccess(force = false) {
+    const { data, error } = await db.auth.getSession();
+    if (error || !data?.session || !access) { await renderDashboard(error ? null : data?.session); return; }
+    const current = accessGeneration;
+    const refresh = ++accessRefreshGeneration;
+    const { data: fresh, error: accessError } = await db.rpc('liquidlab_my_admin_access');
+    if (current !== accessGeneration || refresh !== accessRefreshGeneration) return;
+    if (accessError) {
+      showMessage(dashboardMessage, 'Could not refresh permissions. Try again shortly.', true);
+      return;
+    }
+    if (JSON.stringify(fresh) !== JSON.stringify(access)) { await renderDashboard(data.session); return; }
+    if (force) await Promise.all([loadDashboard(), access.role === 'owner' ? loadAdminList() : Promise.resolve()]);
+  }
+  window.addEventListener('focus', () => { void refreshAccess(); });
+  setInterval(() => { if (!document.hidden && access) void refreshAccess(); }, 60000);
+
+  function resetAdminForm() {
+    editingAdmin = '';
+    accessForm.reset();
+    accessEmail.readOnly = false;
+    saveAccess.textContent = 'Add Admin';
+    cancelEdit.hidden = true;
+  }
+  function editAdmin(row) {
+    editingAdmin = row.email;
+    accessEmail.value = row.email;
+    accessEmail.readOnly = true;
+    for (const input of accessForm.querySelectorAll('[name="permission"]')) input.checked = row.permissions.includes(input.value);
+    saveAccess.textContent = 'Save permissions';
+    cancelEdit.hidden = false;
+    showMessage(accessMessage, `Editing permissions for ${row.email}`);
+    accessForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  async function loadAdminList() {
+    const current = ++accessListGeneration;
+    if (access?.role !== 'owner') return;
+    accessList.textContent = 'Loading admin access…';
+    const { data, error } = await db.from('liquidlab_admin_access')
+      .select('email,role,permissions,added_by,added_at,updated_by,updated_at').order('added_at');
+    if (current !== accessListGeneration || access?.role !== 'owner') return;
+    accessList.replaceChildren();
+    if (error) { showMessage(accessMessage, `Could not load admin access: ${error.message}`, true); return; }
+    accessRows = data || [];
+    const ownerCount = accessRows.filter(row => row.role === 'owner').length;
+    const adminCount = accessRows.filter(row => row.role === 'admin').length;
+    document.getElementById('adminAccessCount').textContent = `${ownerCount} owner${ownerCount === 1 ? '' : 's'} · ${adminCount} admin${adminCount === 1 ? '' : 's'}`;
+    for (const record of accessRows) {
+      const row = document.createElement('article'); row.className = 'admin-access-row';
+      const info = document.createElement('div'); info.className = 'admin-access-info';
+      const email = document.createElement('strong'); email.textContent = record.email;
+      const role = document.createElement('span'); role.className = 'admin-role'; role.textContent = record.role;
+      const permissions = document.createElement('p'); permissions.textContent = record.role === 'owner'
+        ? 'Full access · Manages admin access' : record.permissions.map(key => permissionLabels[key]).filter(Boolean).join(' · ') || 'View-only store panel';
+      const meta = document.createElement('small'); meta.textContent = `Added ${new Date(record.added_at).toLocaleDateString()}${record.added_by !== 'SQL setup' ? ` by ${record.added_by}` : ''}`;
+      info.append(email, role, permissions, meta); row.append(info);
+      if (record.role === 'admin') {
+        const actions = document.createElement('div'); actions.className = 'admin-access-row-actions';
+        const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'ghost-button'; edit.textContent = 'Edit permissions'; edit.addEventListener('click', () => editAdmin(record));
+        const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'ghost-button admin-access-remove'; remove.textContent = 'Remove';
+        remove.addEventListener('click', async () => {
+          if (!confirm(`Remove admin access for ${record.email}?`)) return;
+          remove.disabled = true;
+          try {
+            const { data, error } = await db.rpc('liquidlab_remove_admin', { target_email: record.email });
+            if (error) throw error;
+            if (!data) throw new Error('This admin was already removed.');
+            if (editingAdmin === record.email) resetAdminForm();
+            showMessage(accessMessage, `Removed access for ${record.email}.`);
+            await loadAdminList();
+          } catch (error) { showMessage(accessMessage, error.message || 'Could not remove admin access.', true); remove.disabled = false; }
+        });
+        actions.append(edit, remove); row.append(actions);
+      }
+      accessList.append(row);
+    }
+  }
+  cancelEdit.addEventListener('click', () => { resetAdminForm(); showMessage(accessMessage, ''); });
+  accessForm.addEventListener('change', event => {
+    const view = accessForm.querySelector('[value="view_orders"]');
+    const update = accessForm.querySelector('[value="update_orders"]');
+    if (event.target === update && update.checked) view.checked = true;
+    if (event.target === view && !view.checked) update.checked = false;
+  });
+  accessForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (access?.role !== 'owner') return;
+    const email = accessEmail.value.trim().toLowerCase();
+    if (!editingAdmin && accessRows.some(row => row.email === email)) { showMessage(accessMessage, 'This email already has access. Use Edit permissions.', true); return; }
+    const permissions = [...accessForm.querySelectorAll('[name="permission"]:checked')].map(input => input.value);
+    saveAccess.disabled = true; cancelEdit.disabled = true;
+    showMessage(accessMessage, 'Saving admin access…');
+    try {
+      const { error } = await db.rpc('liquidlab_save_admin', { target_email: email, requested_permissions: permissions, replace_existing: Boolean(editingAdmin) });
+      if (error) throw error;
+      resetAdminForm();
+      showMessage(accessMessage, `Saved access for ${email}. They can sign in using the existing email login.`);
+      await loadAdminList();
+    } catch (error) { showMessage(accessMessage, error.message || 'Could not save admin access.', true); }
+    finally { saveAccess.disabled = false; cancelEdit.disabled = false; }
+  });
 })();

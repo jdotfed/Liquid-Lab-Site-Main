@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0c0b10">
-  <title>Orders — Liquid Lab Owner Panel</title>
+  <title>Orders — Liquid Lab Admin Panel</title>
   <link rel="stylesheet" href="order.css?v=20260929-1">
   <style>
     .admin-shell{width:min(100% - 32px,1050px);margin:42px auto 80px}.admin-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}.admin-header h1{margin:0}.admin-note{color:#b9adc2;font-size:13px;line-height:1.5}.admin-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.admin-actions button,.admin-actions a{border:1px solid #634879;border-radius:8px;padding:10px 13px;background:#22182a;color:#eee2f8;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}
@@ -13,8 +13,8 @@
 <body>
   <header class="top"><a class="brand" href="index.html"><img src="logo.png" alt=""><span>Liquid<span class="accent">Lab</span></span></a><a href="admin.html">Store controls</a></header>
   <main class="admin-shell">
-    <div class="admin-header"><div><p class="eyebrow">OWNER ACCESS</p><h1>Recent orders</h1></div><div class="admin-actions"><button id="refreshOrders" type="button">Refresh</button><a href="admin.html">Admin panel</a></div></div>
-    <p class="admin-note">Paid Stripe purchases appear here automatically. Service updates stay in your Discord tickets; there is no website status to maintain.</p>
+    <div class="admin-header"><div><p class="eyebrow">ADMIN ACCESS</p><h1>Recent orders</h1></div><div class="admin-actions"><button id="refreshOrders" type="button">Refresh</button><a href="admin.html">Admin panel</a></div></div>
+    <p class="admin-note">These are paid Stripe purchases. Set progress here after your team starts or completes a service. This progress is separate from the Discord bot’s ticket status.</p>
     <p id="adminMessage" class="message" role="status"></p>
     <div id="orders" class="orders" aria-live="polite"></div>
   </main>
@@ -27,18 +27,29 @@
     const message = document.getElementById('adminMessage');
     if (!config || !window.supabase) { message.textContent = 'Admin configuration is unavailable.'; return; }
     const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey);
-    const owners = config.ownerEmails.map(email => email.toLowerCase());
+    let generation = 0;
     const money = (n, currency) => new Intl.NumberFormat('en-US', {style:'currency',currency:currency.toUpperCase()}).format(n/100);
     function el(tag, text, className) { const node=document.createElement(tag);node.textContent=text;if(className)node.className=className;return node; }
     async function load() {
+      const current = ++generation;
       host.replaceChildren(); message.textContent = 'Loading orders…'; message.classList.remove('error');
       const {data:{user},error:authError} = await db.auth.getUser();
-      if (authError || !user || !owners.includes((user.email || '').toLowerCase())) {
+      if (current !== generation) return;
+      if (authError || !user) {
         message.textContent = 'Sign in through the Admin panel first, then return here.';
         const link = el('a', 'Open Admin panel'); link.href='admin.html';host.append(link);return;
       }
-      const {data,error} = await db.from('store_orders').select('checkout_session_id,reference,customer_email,amount_total,currency,items,purchased_at')
+      const {data:access,error:accessError} = await db.rpc('liquidlab_my_admin_access');
+      if (current !== generation) return;
+      const canView = access?.role === 'owner' || access?.permissions?.includes('view_orders');
+      const canUpdate = access?.role === 'owner' || access?.permissions?.includes('update_orders');
+      if (accessError || !canView) {
+        message.textContent = accessError ? 'Could not verify purchase permissions. Try refreshing.' : 'You do not have permission to view purchases.';
+        return;
+      }
+      const {data,error} = await db.from('store_orders').select('checkout_session_id,reference,customer_email,amount_total,currency,items,service_status,purchased_at')
         .order('purchased_at',{ascending:false}).limit(100);
+      if (current !== generation) return;
       if (error) {message.textContent=`Could not load orders: ${error.message}`;message.classList.add('error');return;}
       message.textContent = `${data.length} most recent paid order${data.length===1?'':'s'}`;
       if (!data.length) {host.append(el('p','No orders yet. Confirm your Stripe order webhook is connected.','empty'));return;}
@@ -49,11 +60,30 @@
         head.append(left,el('strong',money(order.amount_total,order.currency)));card.append(head);
         const products=Array.isArray(order.items)?order.items.map(item=>`${item.name}${item.quantity>1?` ×${item.quantity}`:''}`).join(' · '):'Stripe purchase';
         card.append(el('p',products||'Stripe purchase'),el('small',new Date(order.purchased_at).toLocaleString()));
-        card.append(el('small','Payment confirmed by Stripe'));host.append(card);
+        if (!canUpdate) {
+          card.append(el('p', `Status: ${{paid:'Payment received',in_progress:'In progress',completed:'Completed'}[order.service_status] || order.service_status}`));
+          host.append(card);return;
+        }
+        const row=el('div','','row');const field=el('div');const label=el('label','Customer page status');
+        const select=document.createElement('select');
+        [['paid','Payment received'],['in_progress','In progress'],['completed','Completed']].forEach(([value,text])=>{
+          const option=el('option',text);option.value=value;select.append(option);
+        });select.value=order.service_status;field.append(label,select);
+        const save=el('button','Save status');save.type='button';
+        save.addEventListener('click',async()=>{
+          save.disabled=true;message.textContent='Saving…';
+          const {data:saved,error:requestError}=await db.from('store_orders').update({service_status:select.value}).eq('checkout_session_id',order.checkout_session_id).select('checkout_session_id').maybeSingle();
+          const updateError = requestError || (!saved ? new Error('This order could not be updated. Check your permissions and refresh.') : null);
+          message.textContent=updateError?`Could not save: ${updateError.message}`:'Status saved. Customer page is updated.';
+          message.classList.toggle('error',Boolean(updateError));save.disabled=false;
+        });row.append(field,save);card.append(row);host.append(card);
       });
     }
-    document.getElementById('refreshOrders').addEventListener('click',load);
-    load().catch(()=>{message.textContent='Could not load orders. Try refreshing.';message.classList.add('error');});
+    const safeLoad = () => load().catch(() => { host.replaceChildren(); message.textContent='Could not load orders. Try refreshing.';message.classList.add('error'); });
+    document.getElementById('refreshOrders').addEventListener('click',safeLoad);
+    db.auth.onAuthStateChange(()=>{++generation;host.replaceChildren();setTimeout(()=>{void safeLoad();},0);});
+    setInterval(()=>{if(!document.hidden)void safeLoad();},60000);
+    void safeLoad();
   })();
   </script>
 </body>

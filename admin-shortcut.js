@@ -2,9 +2,6 @@
   'use strict';
   const config = window.LIQUID_LAB_ADMIN_CONFIG;
   if (!config?.supabaseUrl || !config?.supabasePublishableKey || !window.supabase) return;
-  const owners = new Set((Array.isArray(config.ownerEmails) ? config.ownerEmails : [])
-    .filter(email => typeof email === 'string').map(email => email.trim().toLowerCase()));
-  if (!owners.size) return;
   const host = document.querySelector('.nav-actions') || document.querySelector('header .nav-links');
   if (!host) return;
 
@@ -38,7 +35,10 @@
       // A stored session is only a hint: verify the identity with Supabase.
       const { data, error } = await db.auth.getUser();
       if (current !== generation || error || !data?.user) return;
-      if (owners.has(String(data.user.email || '').trim().toLowerCase())) show();
+      const { data: access, error: accessError } = await db.rpc('liquidlab_my_admin_access');
+      if (current !== generation || accessError) return;
+      if (access && ['owner','admin'].includes(access.role)
+          && access.email === String(data.user.email || '').trim().toLowerCase()) show();
     } catch { /* Keep the shortcut absent if the login cannot be verified. */ }
   }
   db.auth.onAuthStateChange((_event, session) => {
@@ -53,4 +53,5 @@
     if (!document.hidden) void verifyOwner();
   });
   void verifyOwner();
+  setInterval(() => { if (!document.hidden && shortcut) void verifyOwner(); }, 60000);
 })();
