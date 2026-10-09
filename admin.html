@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css?v=20260908-sale1">
   <link rel="stylesheet" href="admin-access.css?v=20261006">
-  <link rel="stylesheet" href="instant-accounts.css?v=20261007">
+  <link rel="stylesheet" href="instant-accounts.css?v=20261009-manage1">
   <style>
     .admin-home-button{display:inline-flex;align-items:center;justify-content:center;padding:11px 13px;border:1px solid #7a00ff;border-radius:8px;background:#190a2c;color:#fff;font:700 11px Inter,system-ui,sans-serif;white-space:nowrap;text-decoration:none;transition:background .2s}
     .admin-home-button:hover{background:#7a00ff;color:#fff}
@@ -85,10 +85,10 @@
             <label>Account type<select id="instantProductKey" required><option value="bo2_premade">BO2 Pre-made Account</option><option value="bo3_premade">BO3 Pre-made Account</option><option value="bo2_bo3_premade">BO2 + BO3 Pre-made Account (both games)</option></select></label>
             <label>Private inventory label<input id="instantLabel" required maxlength="100" placeholder="Example: BO3 Account #1"></label>
             <label>Username / PSN <small>(optional)</small><input id="instantUsername" maxlength="200" autocomplete="off"></label>
-            <label>Login email<input id="instantLoginEmail" required maxlength="320" autocomplete="off"></label>
-            <label>Login password<input id="instantLoginPassword" required maxlength="500" autocomplete="new-password"></label>
+            <label>Login email<input id="instantLoginEmail" type="email" required maxlength="320" autocomplete="off"></label>
+            <label>Login password<input id="instantLoginPassword" type="password" required maxlength="500" autocomplete="new-password"></label>
             <label>Recovery email <small>(optional)</small><input id="instantRecoveryEmail" maxlength="320" autocomplete="off"></label>
-            <label>Recovery password <small>(optional)</small><input id="instantRecoveryPassword" maxlength="500" autocomplete="new-password"></label>
+            <label>Recovery password <small>(optional)</small><input id="instantRecoveryPassword" type="password" maxlength="500" autocomplete="new-password"></label>
             <label class="wide-field">Account notes / instructions <small>(optional)</small><textarea id="instantNotes" rows="4" maxlength="5000" placeholder="Anything the buyer needs to know"></textarea></label>
             <div class="wide-field instant-actions"><button class="primary-button" type="submit">Encrypt & Add to Stock</button></div>
           </form>
@@ -96,7 +96,9 @@
         <p id="instantMessage" class="message" role="status" aria-live="polite"></p>
 
         <div class="instant-columns">
-          <div><div class="instant-subhead"><h3>Inventory</h3><span id="instantInventoryCount"></span></div><div id="instantInventoryList" class="instant-list"></div></div>
+          <div><div class="instant-subhead"><h3>Inventory</h3><span id="instantInventoryCount"></span></div>
+            <div class="instant-inventory-filters"><label>Find an account<input id="instantInventorySearch" type="search" placeholder="Search label, game, or ID"></label><label>Status<select id="instantInventoryStatus"><option value="all">All statuses</option><option value="available">Available</option><option value="disabled">Disabled</option><option value="reserved">Reserved</option><option value="delivered">Delivered</option></select></label></div>
+            <p id="instantInventoryHint" class="instant-note"></p><div id="instantInventoryList" class="instant-list"></div></div>
           <div><div class="instant-subhead"><h3>Recent Deliveries</h3><span>Latest 150</span></div><div id="instantDeliveryList" class="instant-list"></div></div>
         </div>
       </section>
@@ -130,7 +132,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
-  <script src="admin.js?v=20261006-access1"></script>
-  <script src="instant-accounts-admin.js?v=20261009-combo1"></script>
+  <dialog id="instantAccountDialog" class="instant-account-dialog" aria-labelledby="instantAccountDialogTitle">
+    <div class="instant-dialog-head"><h2 id="instantAccountDialogTitle">Account details</h2><button id="instantAccountDialogClose" type="button" aria-label="Close account details">×</button></div>
+    <div id="instantAccountDialogBody"></div>
+  </dialog>
+  <script src="admin.js?v=20261009-manage1"></script>
+  <script src="instant-accounts-admin.js?v=20261009-manage1"></script>
 </body>
 </html>

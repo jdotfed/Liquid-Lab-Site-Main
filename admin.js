@@ -195,9 +195,20 @@
       updateStatus(product.product_id, nextStatus, row);
     }));
     body.appendChild(wholeProduct);
-    body.appendChild(saleEditor(product, 'product_controls', 'product_id', product.product_id, row));
+    const instantProduct = product.product_id === 'premium-modded-account';
+    if (!instantProduct) body.appendChild(saleEditor(product, 'product_controls', 'product_id', product.product_id, row));
 
-    if (options.length) {
+    if (instantProduct) {
+      const note = document.createElement('p');
+      note.className = 'no-options';
+      note.textContent = 'Manage BO2, BO3, and BO2 + BO3 prices, included items, stock, and checkout links in Instant Account Delivery.';
+      body.appendChild(note);
+      if (access?.role === 'owner') {
+        const link = document.createElement('a'); link.href = '#instantAccountsPanel';
+        link.className = 'admin-home-button'; link.textContent = 'Open Account Inventory';
+        body.appendChild(link);
+      }
+    } else if (options.length) {
       const optionHeading = document.createElement('p');
       optionHeading.className = 'option-heading';
       optionHeading.textContent = 'DROPDOWN OPTIONS';

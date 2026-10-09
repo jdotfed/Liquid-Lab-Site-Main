@@ -411,7 +411,7 @@
           </div>
         </article>
 
-        <article class="product-card featured" data-category="accounts" data-product-id="premium-modded-account">
+        <article class="product-card featured" data-category="accounts" data-product-id="premium-modded-account" data-instant-listing="true">
           <div class="badge popular">MOST POPULAR</div>
           <div class="product-image">
             <img src="products\premium.png" alt="Premium Modded Account" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
@@ -419,25 +419,26 @@
           </div>
           <div class="product-meta"><span>ACCOUNT</span><span class="stock" id="premiumAccountStock"><i></i> CHECKING STOCK</span></div>
           <h3>Premium Modded Account</h3>
-          <p>Choose a BO2, BO3, or combined BO2 + BO3 pre-made account. In-stock accounts are delivered automatically by email after Stripe confirms payment.</p>
-          <ul>
-            <li><strong>BO2, BO3, or BO2 + BO3:</strong> PS4 / PS5</li>
-            <li><strong>BO2 + BO3:</strong> Both games on one account</li>
-            <li><strong>Cold War:</strong> PlayStation and Xbox consoles — Zombies only</li>
-            <li>Instant accounts are removed from stock as soon as they are purchased</li>
-            <li>Secure account details are sent to your Stripe checkout email</li>
-          </ul>
+          <p>Choose BO2, BO3, or both games on one pre-made account. Available accounts are delivered by email after Stripe confirms payment.</p>
           <div class="bot-lobby-selector" style="margin: 14px 0 18px;">
             <label for="premiumAccountOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT ACCOUNT</label>
             <select id="premiumAccountOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
-              <option value="0" data-link="" data-instant-key="bo2_premade" hidden disabled>BO2 Pre-made Modded Account — Checking stock…</option>
-              <option value="30" data-link="" data-instant-key="bo3_premade" disabled>BO3 Pre-made Modded Account — Checking stock…</option>
-              <option value="30" data-link="https://buy.stripe.com/cNi14f3VtgHc9xn62f5AQ16">Cold War Zombies Account — PlayStation / Xbox — $30</option>
-              <option value="0" data-link="" data-instant-key="bo2_bo3_premade" hidden disabled>BO2 + BO3 Pre-made Modded Account — Checking stock…</option>
+              <option value="0" data-link="" data-instant-key="bo2_premade">BO2 Pre-made Modded Account — Checking stock…</option>
+              <option value="30" data-link="" data-instant-key="bo3_premade">BO3 Pre-made Modded Account — Checking stock…</option>
+              <option value="0" data-link="" data-instant-key="bo2_bo3_premade">BO2 + BO3 Pre-made Modded Account — Checking stock…</option>
             </select>
           </div>
+          <p><strong id="premiumAccountIncludesTitle">BO2 account includes</strong></p>
+          <ul id="premiumAccountIncludes" aria-live="polite">
+            <li>BO2 pre-made PSN account</li>
+            <li>BO2 Multiplayer + Zombies</li>
+            <li>PS4 / PS5</li>
+            <li>Account login email and password</li>
+            <li>Private account delivery link sent by email</li>
+          </ul>
+          <p id="premiumAccountAvailability" class="package-details" role="status">Checking availability…</p>
           <div class="product-bottom">
-            <div class="price"><small>PRICE</small><strong id="premiumAccountPrice">$30.00</strong></div>
+            <div class="price"><small>PRICE</small><strong id="premiumAccountPrice">—</strong></div>
             <a href="#" class="buy-btn sellix-link" id="premiumAccountBuy" aria-disabled="true">Checking Stock <span>→</span></a>
           </div>
         </article>
@@ -1572,7 +1573,6 @@
       }
 
       const groupedServices = [
-        ['premiumAccountOption','premiumAccountPrice','premiumAccountBuy'],
         ['bo3DivOption','bo3DivPrice','bo3DivBuy'],
         ['bo3CryptoOption','bo3CryptoPrice','bo3CryptoBuy'],
         ['bo3PackageOption','bo3PackagePrice','bo3PackageBuy'],
@@ -1799,12 +1799,12 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
-  <script src="instant-delivery.js?v=20261009-combo1"></script>
+  <script src="instant-delivery.js?v=20261009-manage1"></script>
   <script src="bo2-zombies-links.js?v=20261005-checkout1"></script>
   <script src="bo2-zombies.js?v=20261005-checkout1"></script>
-  <script src="product-status.js?v=20260929-cart1"></script>
+  <script src="product-status.js?v=20261009-manage1"></script>
   <script src="discord-link.js?v=20260929-cart1"></script>
-  <script src="cart.js?v=20261009-instant-final1"></script>
+  <script src="cart.js?v=20261009-manage1"></script>
   <script src="announcement.js?v=20260907"></script>
   <script src="admin-shortcut.js?v=20261005"></script>
 </body>

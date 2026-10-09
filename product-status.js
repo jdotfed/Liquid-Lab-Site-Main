@@ -74,6 +74,7 @@
   }
 
   function setupCardSales(card, product, optionRows) {
+    if (card.dataset.instantListing === 'true') return;
     const select = card.querySelector('select');
     const apply = () => {
       let selectedSale = null;
@@ -99,6 +100,10 @@
   function setCardStatus(card, status) {
     const paused = status === 'paused';
     card.dataset.paused = paused ? 'true' : 'false';
+    if (card.dataset.instantListing === 'true') {
+      window.dispatchEvent(new Event('liquidlab:instant-controls-updated'));
+      return;
+    }
 
     const stock = card.querySelector('.stock');
     if (stock) {
@@ -159,6 +164,7 @@
   }
 
   function setOptionStatuses(card, optionRows) {
+    if (card.dataset.instantListing === 'true') return;
     const select = card.querySelector('select');
     if (!select) return;
 

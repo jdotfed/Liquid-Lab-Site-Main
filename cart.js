@@ -26,7 +26,7 @@
   }
   function info(item) {
     const card = cards.get(item.productId);
-    if (!card) return null;
+    if (!card || card.dataset.instantListing === 'true') return null;
     const option = optionFor(card, item.optionIndex);
     if (item.optionIndex !== -1 && !option) return null;
     const link = option?.dataset.link || card.querySelector('a.buy-btn')?.dataset.originalHref
@@ -134,6 +134,7 @@
       || selected?.dataset.instantKey || selected?.dataset.ticket === 'true' || !/^https:\/\/buy\.stripe\.com\//.test(href || '');
   }
   for (const card of cards.values()) {
+    if (card.dataset.instantListing === 'true') continue;
     const stripeOption = [...(card.querySelector('select')?.options || [])]
       .some(option => !option.dataset.instantKey && /^https:\/\/buy\.stripe\.com\//.test(option.dataset.link || '') && option.dataset.ticket !== 'true');
     if (!stripeOption && !/^https:\/\/buy\.stripe\.com\//.test(card.querySelector('.buy-btn')?.getAttribute('href') || '')) continue;
