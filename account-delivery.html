@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0b0910">
+  <title>Account Delivery — Liquid Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="account-delivery.css?v=20261007">
+</head>
+<body>
+  <header><a class="brand" href="index.html"><img src="logo.png" alt=""><span>LIQUID <b>LAB</b></span></a><a class="home" href="index.html">Homepage</a></header>
+  <main>
+    <section class="delivery-card" aria-labelledby="deliveryTitle">
+      <p class="eyebrow">SECURE INSTANT DELIVERY</p>
+      <div id="loadingView"><h1 id="deliveryTitle">Loading your account…</h1><p>Verifying your private delivery link.</p><div class="loader" aria-hidden="true"></div></div>
+      <div id="errorView" hidden><h1>Delivery link unavailable</h1><p id="errorMessage">This private link is invalid or has expired.</p><a class="support" href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer">Open a Support Ticket</a></div>
+      <div id="accountView" hidden>
+        <div class="ready"><span>✓</span><div><h1>Your account is ready</h1><p id="productName"></p></div></div>
+        <div class="notice"><strong>Save these details now.</strong> This private page expires automatically. Do not share its URL.</div>
+        <div id="accountFields" class="fields"></div>
+        <p id="expiry" class="expiry"></p>
+        <div class="actions"><button id="copyAll" type="button">Copy All Details</button><a href="https://discord.gg/liquidlab" target="_blank" rel="noreferrer">Need Help?</a></div>
+        <p id="copyMessage" class="copy-message" role="status"></p>
+      </div>
+    </section>
+  </main>
+  <footer>Liquid Lab • Private Account Delivery</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="site-config.js?v=20260907"></script>
+  <script src="account-delivery.js?v=20261007"></script>
+</body>
+</html>

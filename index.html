@@ -417,25 +417,26 @@
             <img src="products\premium.png" alt="Premium Modded Account" loading="lazy" onerror="this.closest('.product-image').classList.add('img-error')">
             <div class="product-icon">A</div>
           </div>
-          <div class="product-meta"><span>ACCOUNT</span><span class="stock"><i></i> IN STOCK</span></div>
+          <div class="product-meta"><span>ACCOUNT</span><span class="stock" id="premiumAccountStock"><i></i> CHECKING STOCK</span></div>
           <h3>Premium Modded Account</h3>
-          <p>Choose a pre-made modded account for BO3 or Cold War. Platform availability is listed with every option below.</p>
+          <p>Choose a pre-made account below. In-stock BO2 and BO3 accounts are delivered automatically by email after Stripe confirms payment.</p>
           <ul>
-            <li><strong>BO3:</strong> PS4 / PS5 only</li>
+            <li><strong>BO2 / BO3:</strong> PS4 / PS5</li>
             <li><strong>Cold War:</strong> PlayStation and Xbox consoles — Zombies only</li>
-            <li>Custom package variants</li>
-            <li>Order support included</li>
+            <li>Instant accounts are removed from stock as soon as they are purchased</li>
+            <li>Secure account details are sent to your Stripe checkout email</li>
           </ul>
           <div class="bot-lobby-selector" style="margin: 14px 0 18px;">
             <label for="premiumAccountOption" style="display:block;margin-bottom:7px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;">SELECT ACCOUNT</label>
             <select id="premiumAccountOption" style="width:100%;padding:12px 14px;border-radius:8px;border:1px solid #3a3a42;background:#151518;color:#fff;font:inherit;">
-              <option value="30" data-link="https://buy.stripe.com/28EdR1fEbgHc10Rbmz5AQ15">BO3 Pre-made Modded Account — PS4 / PS5 — $30</option>
+              <option value="0" data-link="" data-instant-key="bo2_premade" hidden disabled>BO2 Pre-made Modded Account — Checking stock…</option>
+              <option value="30" data-link="" data-instant-key="bo3_premade" disabled>BO3 Pre-made Modded Account — Checking stock…</option>
               <option value="30" data-link="https://buy.stripe.com/cNi14f3VtgHc9xn62f5AQ16">Cold War Zombies Account — PlayStation / Xbox — $30</option>
             </select>
           </div>
           <div class="product-bottom">
             <div class="price"><small>PRICE</small><strong id="premiumAccountPrice">$30.00</strong></div>
-            <a href="https://buy.stripe.com/28EdR1fEbgHc10Rbmz5AQ15" class="buy-btn sellix-link" id="premiumAccountBuy">Buy Product <span>→</span></a>
+            <a href="#" class="buy-btn sellix-link" id="premiumAccountBuy" aria-disabled="true">Checking Stock <span>→</span></a>
           </div>
         </article>
 
@@ -1796,11 +1797,12 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
+  <script src="instant-delivery.js?v=20261009-final1"></script>
   <script src="bo2-zombies-links.js?v=20261005-checkout1"></script>
   <script src="bo2-zombies.js?v=20261005-checkout1"></script>
   <script src="product-status.js?v=20260929-cart1"></script>
   <script src="discord-link.js?v=20260929-cart1"></script>
-  <script src="cart.js?v=20260929-cart1"></script>
+  <script src="cart.js?v=20261009-instant-final1"></script>
   <script src="announcement.js?v=20260907"></script>
   <script src="admin-shortcut.js?v=20261005"></script>
 </body>

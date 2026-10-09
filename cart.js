@@ -31,7 +31,7 @@
     if (item.optionIndex !== -1 && !option) return null;
     const link = option?.dataset.link || card.querySelector('a.buy-btn')?.dataset.originalHref
       || card.querySelector('a.buy-btn')?.getAttribute('href');
-    if (option?.dataset.ticket === 'true' || !/^https:\/\/buy\.stripe\.com\//.test(link || '')) return null;
+    if (option?.dataset.instantKey || option?.dataset.ticket === 'true' || !/^https:\/\/buy\.stripe\.com\//.test(link || '')) return null;
     const controls = window.LiquidLabProductControls;
     const productControl = controls?.products?.find(row => row.product_id === item.productId);
     const optionControl = controls?.options?.find(row => row.product_id === item.productId
@@ -131,11 +131,11 @@
     const selected = card.querySelector('select')?.selectedOptions[0];
     const href = selected?.dataset.link || card.querySelector('.buy-btn')?.getAttribute('href');
     button.hidden = card.dataset.paused === 'true' || Boolean(selected?.disabled)
-      || selected?.dataset.ticket === 'true' || !/^https:\/\/buy\.stripe\.com\//.test(href || '');
+      || selected?.dataset.instantKey || selected?.dataset.ticket === 'true' || !/^https:\/\/buy\.stripe\.com\//.test(href || '');
   }
   for (const card of cards.values()) {
     const stripeOption = [...(card.querySelector('select')?.options || [])]
-      .some(option => /^https:\/\/buy\.stripe\.com\//.test(option.dataset.link || '') && option.dataset.ticket !== 'true');
+      .some(option => !option.dataset.instantKey && /^https:\/\/buy\.stripe\.com\//.test(option.dataset.link || '') && option.dataset.ticket !== 'true');
     if (!stripeOption && !/^https:\/\/buy\.stripe\.com\//.test(card.querySelector('.buy-btn')?.getAttribute('href') || '')) continue;
     const add = document.createElement('button'); add.type = 'button'; add.className = 'll-add-cart';
     add.textContent = '+ Add to cart';
