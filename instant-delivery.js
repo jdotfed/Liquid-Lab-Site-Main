@@ -13,7 +13,7 @@
     { auth: { persistSession: false, autoRefreshToken: false } });
   const names = {bo2_premade:'BO2',bo3_premade:'BO3',bo2_bo3_premade:'BO2 + BO3'};
   const defaults = {
-    bo2_premade:['BO2 pre-made PSN account','BO2 Multiplayer + Zombies','PS4 / PS5','Account login email and password','Private account delivery link sent by email'],
+    bo2_premade:['Multiplayer:','All unlocks — calling cards, camos, emblems, and more','Master Prestige','Modded stats','Colored classes','2 modded trickshot classes — Class 1 and Class 2','Zombies:','Full recovery','Max rank','5 tally marks','All Navcards','Max bank','All quests completed','Modded career stats','All 14 Perma-Perks (Perma-Perks can be lost)'],
     bo3_premade:['BO3 pre-made modded PSN account','PS4 / PS5','Account login email and password','Private account delivery link sent by email'],
     bo2_bo3_premade:['One pre-made PSN account with BO2 + BO3','BO2 Multiplayer + Zombies','BO3 modded account setup','PS4 / PS5','One set of account login details','Private account delivery link sent by email']
   };
@@ -39,7 +39,12 @@
     if (includesTitle) includesTitle.textContent=`${names[key] || 'Selected'} account includes`;
     if (includes) {
       includes.replaceChildren();
-      for (const item of items) {const li=document.createElement('li');li.textContent=item;includes.append(li);}
+      for (const item of items) {
+        const li=document.createElement('li');
+        const value=String(item).trim();
+        li.textContent=value;
+        includes.append(li);
+      }
     }
     price.textContent=Number(product?.priceCents)>0 ? `$${(Number(product.priceCents)/100).toFixed(2)}` : '—';
     select.disabled=paused;
