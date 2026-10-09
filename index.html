@@ -166,6 +166,14 @@
       background:rgba(137,49,240,.14);color:#dec5ff;
       font-size:10px;font-weight:800;letter-spacing:.04em;line-height:1;
     }
+    #premiumAccountIncludes .account-includes-heading{
+      list-style:none;margin:14px 0 7px;padding-left:0;
+      color:#d7a6ff;font-size:13px;font-weight:800;letter-spacing:.03em;
+    }
+    #premiumAccountIncludes .account-includes-heading:first-child{margin-top:0;}
+    #premiumAccountIncludes .account-includes-heading::before{
+      content:none!important;display:none!important;
+    }
   </style>
 
 <style>.ll-mobile-reviews{display:none}@media(max-width:800px){.ll-mobile-reviews{display:inline-block;color:#fff;font-size:13px;font-weight:600;margin-right:12px}}</style>
@@ -430,13 +438,13 @@
           </div>
           <p><strong id="premiumAccountIncludesTitle">BO2 account includes</strong></p>
           <ul id="premiumAccountIncludes" aria-live="polite">
-            <li>Multiplayer:</li>
+            <li class="account-includes-heading">Multiplayer</li>
             <li>All unlocks — calling cards, camos, emblems, and more</li>
             <li>Master Prestige</li>
             <li>Modded stats</li>
             <li>Colored classes</li>
             <li>2 modded trickshot classes — Class 1 and Class 2</li>
-            <li>Zombies:</li>
+            <li class="account-includes-heading">Zombies</li>
             <li>Full recovery</li>
             <li>Max rank</li>
             <li>5 tally marks</li>

@@ -42,7 +42,8 @@
       for (const item of items) {
         const li=document.createElement('li');
         const value=String(item).trim();
-        li.textContent=value;
+        li.textContent=value.replace(/:$/,'');
+        if(/^(Multiplayer|Zombies):$/i.test(value)) li.className='account-includes-heading';
         includes.append(li);
       }
     }
