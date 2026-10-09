@@ -419,9 +419,10 @@
           </div>
           <div class="product-meta"><span>ACCOUNT</span><span class="stock" id="premiumAccountStock"><i></i> CHECKING STOCK</span></div>
           <h3>Premium Modded Account</h3>
-          <p>Choose a pre-made account below. In-stock BO2 and BO3 accounts are delivered automatically by email after Stripe confirms payment.</p>
+          <p>Choose a BO2, BO3, or combined BO2 + BO3 pre-made account. In-stock accounts are delivered automatically by email after Stripe confirms payment.</p>
           <ul>
-            <li><strong>BO2 / BO3:</strong> PS4 / PS5</li>
+            <li><strong>BO2, BO3, or BO2 + BO3:</strong> PS4 / PS5</li>
+            <li><strong>BO2 + BO3:</strong> Both games on one account</li>
             <li><strong>Cold War:</strong> PlayStation and Xbox consoles — Zombies only</li>
             <li>Instant accounts are removed from stock as soon as they are purchased</li>
             <li>Secure account details are sent to your Stripe checkout email</li>
@@ -432,6 +433,7 @@
               <option value="0" data-link="" data-instant-key="bo2_premade" hidden disabled>BO2 Pre-made Modded Account — Checking stock…</option>
               <option value="30" data-link="" data-instant-key="bo3_premade" disabled>BO3 Pre-made Modded Account — Checking stock…</option>
               <option value="30" data-link="https://buy.stripe.com/cNi14f3VtgHc9xn62f5AQ16">Cold War Zombies Account — PlayStation / Xbox — $30</option>
+              <option value="0" data-link="" data-instant-key="bo2_bo3_premade" hidden disabled>BO2 + BO3 Pre-made Modded Account — Checking stock…</option>
             </select>
           </div>
           <div class="product-bottom">
@@ -1797,7 +1799,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
-  <script src="instant-delivery.js?v=20261009-final1"></script>
+  <script src="instant-delivery.js?v=20261009-combo1"></script>
   <script src="bo2-zombies-links.js?v=20261005-checkout1"></script>
   <script src="bo2-zombies.js?v=20261005-checkout1"></script>
   <script src="product-status.js?v=20260929-cart1"></script>

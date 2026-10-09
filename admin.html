@@ -75,14 +75,14 @@
 
       <section id="instantAccountsPanel" class="instant-panel" hidden aria-labelledby="instantAccountsHeading">
         <div class="section-heading"><h2 id="instantAccountsHeading">Instant Account Delivery</h2><span id="instantSummary">Owner controls</span></div>
-        <p class="instant-note">Load BO2 and BO3 pre-made accounts here. Stripe assigns one unused account and emails a private 72-hour delivery link automatically.</p>
+        <p class="instant-note">Load BO2, BO3, or combined BO2 + BO3 pre-made accounts here. The combined option is one account with both games. Each option has its own stock and Stripe link. Stripe assigns one unused account and emails a private 72-hour delivery link automatically.</p>
 
         <div id="instantProducts" class="instant-products" aria-live="polite"></div>
 
         <details class="instant-add" open>
           <summary>Add Account Inventory</summary>
           <form id="instantInventoryForm" class="instant-form">
-            <label>Game<select id="instantProductKey" required><option value="bo2_premade">BO2 Pre-made Account</option><option value="bo3_premade">BO3 Pre-made Account</option></select></label>
+            <label>Account type<select id="instantProductKey" required><option value="bo2_premade">BO2 Pre-made Account</option><option value="bo3_premade">BO3 Pre-made Account</option><option value="bo2_bo3_premade">BO2 + BO3 Pre-made Account (both games)</option></select></label>
             <label>Private inventory label<input id="instantLabel" required maxlength="100" placeholder="Example: BO3 Account #1"></label>
             <label>Username / PSN <small>(optional)</small><input id="instantUsername" maxlength="200" autocomplete="off"></label>
             <label>Login email<input id="instantLoginEmail" required maxlength="320" autocomplete="off"></label>
@@ -131,6 +131,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="site-config.js?v=20260907"></script>
   <script src="admin.js?v=20261006-access1"></script>
-  <script src="instant-accounts-admin.js?v=20261007"></script>
+  <script src="instant-accounts-admin.js?v=20261009-combo1"></script>
 </body>
 </html>

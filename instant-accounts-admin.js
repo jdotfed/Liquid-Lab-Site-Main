@@ -7,6 +7,7 @@
   const message = document.getElementById('instantMessage');
   if (!config || !window.supabase || !panel) return;
   const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey);
+  const gameLabels = { bo2_premade: 'BO2', bo3_premade: 'BO3', bo2_bo3_premade: 'BO2 + BO3' };
   let generation = 0;
   const money = cents => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(Number(cents || 0)/100);
   const text = (tag,value,className) => { const node=document.createElement(tag);node.textContent=value;if(className)node.className=className;return node; };
@@ -44,7 +45,7 @@
     rows.forEach(item=>{
       const row=text('article','','instant-row');const head=text('div','','instant-row-head');
       head.append(text('strong',item.label),text('small',item.status.replaceAll('_',' '),`instant-status ${item.status}`));
-      row.append(head,text('p',`${item.product_key==='bo2_premade'?'BO2':'BO3'} • Added by ${item.added_by}`),text('small',new Date(item.added_at).toLocaleString()));
+      row.append(head,text('p',`${gameLabels[item.product_key] || item.product_key} • Added by ${item.added_by}`),text('small',new Date(item.added_at).toLocaleString()));
       if(['available','disabled'].includes(item.status)){
         const actions=text('div','','instant-row-actions');const next=item.status==='available'?'disabled':'available';
         const action=button(next==='disabled'?'Disable':'Return to Stock',async()=>{
@@ -60,7 +61,7 @@
     rows.forEach(delivery=>{
       const row=text('article','','instant-row');const head=text('div','','instant-row-head');
       head.append(text('strong',delivery.customer_email),text('small',delivery.status.replaceAll('_',' '),`instant-status ${delivery.status}`));
-      row.append(head,text('p',`${delivery.product_key==='bo2_premade'?'BO2':'BO3'} • ${delivery.checkout_session_id}`),
+      row.append(head,text('p',`${gameLabels[delivery.product_key] || delivery.product_key} • ${delivery.checkout_session_id}`),
         text('small',`${new Date(delivery.purchased_at).toLocaleString()} • Email attempts: ${delivery.email_attempts}`));
       if(delivery.last_error)row.append(text('p',delivery.last_error));
       const actions=text('div','','instant-row-actions');

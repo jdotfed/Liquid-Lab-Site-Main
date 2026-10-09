@@ -7,6 +7,11 @@
   if (!config || !window.supabase || !select || !price || !buy || !stock) return;
   const db = window.supabase.createClient(config.supabaseUrl, config.supabasePublishableKey,
     { auth: { persistSession: false, autoRefreshToken: false } });
+  const productLabels = {
+    bo2_premade: 'BO2 Pre-made Modded Account',
+    bo3_premade: 'BO3 Pre-made Modded Account',
+    bo2_bo3_premade: 'BO2 + BO3 Pre-made Modded Account'
+  };
   let loading = false;
 
   function selectedInstant() {
@@ -53,10 +58,9 @@
       for (const option of select.querySelectorAll('option[data-instant-key]')) {
         const product = products.get(option.dataset.instantKey);
         const configured = product?.enabled && product.checkoutUrl && Number(product.priceCents) > 0;
-        option.hidden = !configured && option.dataset.instantKey === 'bo2_premade';
+        option.hidden = !configured && option.dataset.instantKey !== 'bo3_premade';
         if (!configured) {
-          unavailable(option, product?.displayName || (option.dataset.instantKey === 'bo2_premade'
-            ? 'BO2 Pre-made Modded Account' : 'BO3 Pre-made Modded Account'));
+          unavailable(option, product?.displayName || productLabels[option.dataset.instantKey]);
           continue;
         }
         const count = Math.max(0, Number(product.stock) || 0);
@@ -79,8 +83,7 @@
       renderSelection();
     } catch {
       for (const option of select.querySelectorAll('option[data-instant-key]')) {
-        unavailable(option, option.dataset.instantKey === 'bo2_premade'
-          ? 'BO2 Pre-made Modded Account' : 'BO3 Pre-made Modded Account');
+        unavailable(option, productLabels[option.dataset.instantKey]);
       }
       stock.innerHTML = '<i></i> MANUAL ACCOUNT AVAILABLE';
       const replacement = [...select.options].find(option => !option.dataset.instantKey && !option.disabled);
