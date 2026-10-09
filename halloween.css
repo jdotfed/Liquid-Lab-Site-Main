@@ -2,7 +2,7 @@
 .ll-seasonal{--ll-amber:#e99150}
 .ll-seasonal-store .hero{position:relative}
 .ll-castle-backdrop{position:relative;isolation:isolate;background:#080808}
-.ll-castle-backdrop:before{content:'';position:absolute;inset:0;z-index:0;background:url('assets/halloween/castle.png') center -65px/cover no-repeat;opacity:.85;pointer-events:none}
+.ll-castle-backdrop:before{content:'';position:absolute;inset:0;z-index:0;background:url('halloween-castle.png') center -65px/cover no-repeat;opacity:.85;pointer-events:none}
 .ll-castle-backdrop:after{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,#0808081f 0%,#0808081a 32%,#0808089e 68%,#080808 98%),linear-gradient(90deg,#080808c4 0%,#0808088c 37%,#08080833 70%,#08080826 100%);pointer-events:none}
 .ll-castle-backdrop>.hero{z-index:1}
 .ll-castle-backdrop .hero-copy>p{color:#b8b8c0}
