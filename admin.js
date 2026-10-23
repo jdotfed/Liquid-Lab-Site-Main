@@ -147,8 +147,8 @@
       const price = Number(form.querySelector('.sale-price-input').value);
       const label = form.querySelector('.sale-label-input').value.trim() || 'SALE';
       const link = form.querySelector('.sale-link-input').value.trim();
-      if (!Number.isFinite(price) || price <= 0 || !/^https:\/\//i.test(link)) {
-        showMessage(dashboardMessage, 'Enter a valid sale price and full https:// Stripe link.', true);
+      if (!Number.isFinite(price) || price <= 0 || (link && !/^https:\/\//i.test(link))) {
+        showMessage(dashboardMessage, 'Enter a valid sale price. If supplied, the Stripe link must begin with https://.', true);
         return;
       }
       await updateSale(table, idColumn, idValue, { sale_enabled: true, sale_price: price, sale_label: label, sale_link: link }, row);
@@ -158,6 +158,35 @@
       await updateSale(table, idColumn, idValue, { sale_enabled: false }, row);
     });
 
+    panel.append(summary, form);
+    return panel;
+  }
+
+  function checkoutEditor(record, row) {
+    if (!can('sales')) return document.createDocumentFragment();
+    const panel = document.createElement('details');
+    panel.className = 'sale-editor';
+    const ready = /^https:\/\//i.test(record.checkout_link || '');
+    const summary = document.createElement('summary');
+    summary.innerHTML = `<span><strong>${ready ? '✓ REGULAR CHECKOUT READY' : 'Add Stripe checkout link'}</strong><small>${ready ? 'Regular-price checkout is connected' : 'Customers cannot buy until a link is saved'}</small></span><b>+</b>`;
+    const form = document.createElement('form');
+    form.className = 'sale-form checkout-link-form';
+    form.innerHTML = `
+      <label class="sale-link-field">Regular Stripe link<input class="checkout-link-input" type="url" maxlength="500" placeholder="https://buy.stripe.com/..." value="${escapeAttribute(record.checkout_link)}"></label>
+      <div class="sale-form-actions">
+        <button class="primary-button" type="submit">Save Checkout Link</button>
+        <button class="ghost-button clear-checkout-link" type="button" ${ready ? '' : 'disabled'}>Remove Link</button>
+      </div>`;
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const link = form.querySelector('.checkout-link-input').value.trim();
+      if (!/^https:\/\//i.test(link)) {
+        showMessage(dashboardMessage, 'Paste the full https:// Stripe checkout link.', true);
+        return;
+      }
+      await updateCheckoutLink(record.product_id, link, row);
+    });
+    form.querySelector('.clear-checkout-link').addEventListener('click', () => updateCheckoutLink(record.product_id, null, row));
     panel.append(summary, form);
     return panel;
   }
@@ -196,7 +225,10 @@
     }));
     body.appendChild(wholeProduct);
     const instantProduct = product.product_id === 'premium-modded-account';
-    if (!instantProduct) body.appendChild(saleEditor(product, 'product_controls', 'product_id', product.product_id, row));
+    if (!instantProduct) {
+      body.appendChild(checkoutEditor(product, row));
+      body.appendChild(saleEditor(product, 'product_controls', 'product_id', product.product_id, row));
+    }
 
     if (instantProduct) {
       const note = document.createElement('p');
@@ -252,7 +284,7 @@
     showMessage(dashboardMessage, '');
     productGrid.innerHTML = '<p class="empty">Loading products…</p>';
     const [{ data: products, error: productError }, { data: options, error: optionError }, { data: history, error: historyError }] = await Promise.all([
-      db.from('product_controls').select('product_id,product_name,status,sort_order,sale_enabled,sale_price,sale_label,sale_link').order('sort_order'),
+      db.from('product_controls').select('product_id,product_name,status,sort_order,sale_enabled,sale_price,sale_label,sale_link,checkout_link').order('sort_order'),
       db.from('product_option_controls').select('id,product_id,option_index,option_name,status,sale_enabled,sale_price,sale_label,sale_link').order('option_index'),
       db.from('product_change_log').select('product_name,old_status,new_status,changed_by,changed_at').order('changed_at', { ascending: false }).limit(25)
     ]);
@@ -370,6 +402,19 @@
       return;
     }
     showMessage(dashboardMessage, payload.sale_enabled === false ? 'Sale ended. The regular price and link are restored.' : 'Sale is live. Refresh the public store to see it.');
+    await loadDashboard();
+  }
+
+  async function updateCheckoutLink(productId, checkoutLink, row) {
+    row.querySelectorAll('.checkout-link-form button').forEach(button => button.disabled = true);
+    const { data, error } = await db.from('product_controls').update({ checkout_link: checkoutLink }).eq('product_id', productId).select('product_id').maybeSingle();
+    const saveError = error || (!data ? new Error('Supabase did not update this checkout link. Run MW4-PRODUCTS.sql, then try again.') : null);
+    if (saveError) {
+      showMessage(dashboardMessage, `Could not save checkout link: ${saveError.message}`, true);
+      row.querySelectorAll('.checkout-link-form button').forEach(button => button.disabled = false);
+      return;
+    }
+    showMessage(dashboardMessage, checkoutLink ? 'Stripe checkout link saved. Refresh the public store to use it.' : 'Checkout link removed. Purchasing is now disabled for this product.');
     await loadDashboard();
   }
 

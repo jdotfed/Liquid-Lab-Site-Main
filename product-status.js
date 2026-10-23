@@ -6,8 +6,16 @@
     auth: { detectSessionInUrl: false, persistSession: false }
   });
 
+  function isHttpsLink(value) {
+    return /^https:\/\//i.test(value || '');
+  }
+
+  function saleIsActive(record) {
+    return Boolean(record?.sale_enabled && Number(record.sale_price) > 0);
+  }
+
   function saleIsValid(record) {
-    return Boolean(record?.sale_enabled && Number(record.sale_price) > 0 && /^https:\/\//i.test(record.sale_link || ''));
+    return Boolean(saleIsActive(record) && isHttpsLink(record.sale_link));
   }
 
   function money(value) {
@@ -24,7 +32,17 @@
     return [...select.options].find((option, index) => optionControlIndex(option, index) === Number(rowIndex));
   }
 
-  function applySaleDisplay(card, sale, selectedOption) {
+  function disableCheckout(button, label = 'Available Soon') {
+    button.removeAttribute('href');
+    button.setAttribute('aria-disabled', 'true');
+    button.setAttribute('tabindex', '-1');
+    button.style.pointerEvents = 'none';
+    button.style.opacity = '.58';
+    button.style.cursor = 'not-allowed';
+    button.textContent = label;
+  }
+
+  function applySaleDisplay(card, sale, selectedOption, product) {
     const price = card.querySelector('.price strong');
     const button = card.querySelector('.buy-btn');
     if (!price || !button) return;
@@ -39,11 +57,12 @@
     const regularPrice = selectedOption
       ? (selectedOption.value === 'ticket' ? 'TICKET' : money(selectedOption.value))
       : price.dataset.regularText;
-    const regularLink = selectedOption?.dataset.link || button.dataset.originalHref || button.dataset.regularHref;
+    const managedLink = !selectedOption && isHttpsLink(product?.checkout_link) ? product.checkout_link : '';
+    const regularLink = selectedOption?.dataset.link || managedLink || button.dataset.originalHref || button.dataset.regularHref;
     price.textContent = regularPrice;
 
     const unavailable = card.dataset.paused === 'true' || selectedOption?.disabled;
-    if (!unavailable && regularLink) {
+    if (!unavailable && isHttpsLink(regularLink)) {
       button.href = regularLink;
       button.removeAttribute('aria-disabled');
       button.removeAttribute('tabindex');
@@ -59,9 +78,9 @@
         button.removeAttribute('rel');
         button.innerHTML = 'Buy Product <span>→</span>';
       }
-    }
+    } else if (!unavailable && !ticketOption) disableCheckout(button);
 
-    if (!saleIsValid(sale) || unavailable || ticketOption) return;
+    if (!saleIsActive(sale) || unavailable || ticketOption) return;
 
     const badge = document.createElement('span');
     badge.className = 'live-sale-badge';
@@ -69,8 +88,17 @@
     card.appendChild(badge);
     card.classList.add('sale-active');
     price.innerHTML = `<span class="regular-price">${regularPrice}</span><span class="discount-price">${money(sale.sale_price)}</span>`;
-    button.href = sale.sale_link;
-    button.innerHTML = 'Shop Sale <span>→</span>';
+    if (saleIsValid(sale)) {
+      button.href = sale.sale_link;
+      button.removeAttribute('aria-disabled');
+      button.removeAttribute('tabindex');
+      button.style.pointerEvents = '';
+      button.style.opacity = '';
+      button.style.cursor = '';
+      button.innerHTML = 'Shop Sale <span>→</span>';
+    } else {
+      disableCheckout(button);
+    }
   }
 
   function setupCardSales(card, product, optionRows) {
@@ -86,12 +114,12 @@
           if (!option) return;
           const base = option.dataset.originalLabel || option.textContent.replace(/ — (?:Temporarily )?Unavailable$/, '');
           option.dataset.originalLabel = base;
-          option.textContent = `${base}${row.status === 'paused' ? ' — Unavailable' : saleIsValid(row) ? ` — ${row.sale_label || 'SALE'} ${money(row.sale_price)}` : ''}`;
+          option.textContent = `${base}${row.status === 'paused' ? ' — Unavailable' : saleIsActive(row) ? ` — ${row.sale_label || 'SALE'} ${money(row.sale_price)}` : ''}`;
         });
         const selectedIndex = optionControlIndex(selectedOption, select.selectedIndex);
         selectedSale = optionRows.find(row => Number(row.option_index) === selectedIndex);
       }
-      applySaleDisplay(card, saleIsValid(selectedSale) ? selectedSale : product, selectedOption);
+      applySaleDisplay(card, saleIsActive(selectedSale) ? selectedSale : product, selectedOption, product);
     };
     if (select) select.addEventListener('change', apply);
     apply();
@@ -142,7 +170,8 @@
       const selectedOption = select?.options[select.selectedIndex];
       const selectedLink = selectedOption?.dataset.link;
       const ticketOption = selectedOption?.value === 'ticket' || selectedOption?.dataset.ticket === 'true';
-      const restoredLink = selectedLink || button.dataset.originalHref;
+      const managedLink = !select && isHttpsLink(card.dataset.checkoutLink) ? card.dataset.checkoutLink : '';
+      const restoredLink = selectedLink || managedLink || button.dataset.originalHref;
       if (restoredLink) button.setAttribute('href', restoredLink);
       button.removeAttribute('aria-disabled');
       button.removeAttribute('tabindex');
@@ -151,7 +180,9 @@
       } else {
         button.removeAttribute('style');
       }
-      if (ticketOption) {
+      if (!restoredLink && !ticketOption) {
+        disableCheckout(button);
+      } else if (ticketOption) {
         button.target = '_blank';
         button.rel = 'noreferrer';
         button.innerHTML = 'Open Ticket <span>→</span>';
@@ -217,7 +248,7 @@
 
   async function loadProductStatuses() {
     const [{ data: products, error: productError }, { data: options, error: optionError }] = await Promise.all([
-      db.from('product_controls').select('product_id,status,sale_enabled,sale_price,sale_label,sale_link'),
+      db.from('product_controls').select('product_id,status,sale_enabled,sale_price,sale_label,sale_link,checkout_link'),
       db.from('product_option_controls').select('product_id,option_index,status,sale_enabled,sale_price,sale_label,sale_link')
     ]);
 
@@ -228,7 +259,10 @@
 
     products.forEach(product => {
       const card = document.querySelector(`[data-product-id="${product.product_id}"]`);
-      if (card) setCardStatus(card, product.status);
+      if (card) {
+        card.dataset.checkoutLink = product.checkout_link || '';
+        setCardStatus(card, product.status);
+      }
     });
 
     if (!optionError && options) {
