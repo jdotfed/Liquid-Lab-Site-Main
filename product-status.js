@@ -88,8 +88,9 @@
     card.appendChild(badge);
     card.classList.add('sale-active');
     price.innerHTML = `<span class="regular-price">${regularPrice}</span><span class="discount-price">${money(sale.sale_price)}</span>`;
-    if (saleIsValid(sale)) {
-      button.href = sale.sale_link;
+    const saleCheckoutLink = saleIsValid(sale) ? sale.sale_link : regularLink;
+    if (isHttpsLink(saleCheckoutLink)) {
+      button.href = saleCheckoutLink;
       button.removeAttribute('aria-disabled');
       button.removeAttribute('tabindex');
       button.style.pointerEvents = '';
